@@ -154,6 +154,25 @@ with abas[3]:
     st.header("4. Casos de uso e priorização")
     st.caption("Aula 2 · slide 30 — nota 1-5 nos 5 critérios; corte obrigatório: sem dono, não vai.")
 
+    exemplos = data_loader.exemplos()
+
+    with st.expander("💡 5 erros a evitar antes de cadastrar seu caso (Aula 2 · slides 8-12)"):
+        for erro in exemplos["cinco_erros"]:
+            st.markdown(f"**{erro['titulo']}** — {erro['descricao']}")
+            st.caption(f"↳ {erro['correcao']}  ·  _{erro['referencia']}_")
+
+    with st.expander("📚 4 casos-exemplo da Empresa Alfa (Aula 2 · slide 37)"):
+        st.caption("Use como inspiração — copie um rótulo e adapte para o seu contexto.")
+        for alfa in exemplos["casos_alfa"]:
+            st.markdown(f"**{alfa['rotulo']}**")
+            st.markdown(
+                f"- Dor: {alfa['dor']}\n"
+                f"- Dados: {alfa['dados']}\n"
+                f"- Decisão: {alfa['decisao']}\n"
+                f"- Valor: {alfa['valor']}"
+            )
+            st.divider()
+
     with st.expander("➕ Adicionar novo caso"):
         novo_rotulo = st.text_input("Rótulo do caso", key="novo_rotulo")
         if st.button("Criar caso"):
