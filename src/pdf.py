@@ -148,6 +148,30 @@ def _secao_governanca(story: list, casos: list, gov: dict, est: dict) -> None:
         story.append(Spacer(1, 0.15 * cm))
 
 
+def _secao_referencias(story: list, est: dict) -> None:
+    """Apêndice pedagógico: 5 erros a evitar + 4 casos-exemplo da Empresa Alfa."""
+    ex = data_loader.exemplos()
+    story.append(PageBreak())
+    story.append(Paragraph("5. Referências pedagógicas (Aula 2)", est["h1"]))
+
+    story.append(Paragraph("5.1 · Cinco erros a evitar", est["h2"]))
+    for erro in ex["cinco_erros"]:
+        story.append(Paragraph(f"<b>{erro['titulo']}</b> — {erro['descricao']}", est["corpo"]))
+        story.append(Paragraph(f"↳ {erro['correcao']}", est["small"]))
+        story.append(Spacer(1, 0.1 * cm))
+
+    story.append(Spacer(1, 0.3 * cm))
+    story.append(Paragraph("5.2 · Casos-exemplo da Empresa Alfa", est["h2"]))
+    for alfa in ex["casos_alfa"]:
+        story.append(Paragraph(f"<b>{alfa['rotulo']}</b>", est["corpo"]))
+        story.append(Paragraph(
+            f"Dor: {alfa['dor']}<br/>Dados: {alfa['dados']}<br/>"
+            f"Decisão: {alfa['decisao']}<br/>Valor: {alfa['valor']}",
+            est["corpo"],
+        ))
+        story.append(Spacer(1, 0.15 * cm))
+
+
 def gerar_pdf(estado: dict) -> bytes:
     """Retorna os bytes do PDF."""
     buffer = io.BytesIO()
@@ -165,5 +189,6 @@ def gerar_pdf(estado: dict) -> bytes:
     _secao_mapa(story, estado.get("mapa") or {}, est)
     _secao_casos(story, estado.get("casos_uso") or [], est)
     _secao_governanca(story, estado.get("casos_uso") or [], estado.get("governanca") or {}, est)
+    _secao_referencias(story, est)
     doc.build(story)
     return buffer.getvalue()
