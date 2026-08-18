@@ -92,25 +92,29 @@ def _secao_casos(story: list, casos: list, est: dict) -> None:
         story.append(Paragraph("Nenhum caso cadastrado.", est["corpo"]))
         return
     ordenados = priorizacao.ranking(casos)
-    linhas = [["Rótulo", "Score", "Faixa", "Quadrante", "Dono", "Pronto"]]
+    celula = ParagraphStyle("Celula", parent=est["corpo"], fontSize=8, leading=10, spaceAfter=0)
+    celula_head = ParagraphStyle("CelulaHead", parent=celula, textColor=colors.white, fontName="Helvetica-Bold")
+
+    linhas: list = [[Paragraph(h, celula_head) for h in ["Rótulo", "Score", "Faixa", "Quadrante", "Dono", "Pronto"]]]
     for c in ordenados:
         r = priorizacao.resumo(c)
         linhas.append([
-            r["rotulo"] or "(sem rótulo)",
-            f"{r['score']:.2f}",
-            r["faixa"],
-            r["quadrante"],
-            r["dono"] or "—",
-            "Sim" if r["pronto"] else "Não",
+            Paragraph(r["rotulo"] or "(sem rótulo)", celula),
+            Paragraph(f"{r['score']:.2f}", celula),
+            Paragraph(r["faixa"], celula),
+            Paragraph(r["quadrante"], celula),
+            Paragraph(r["dono"] or "—", celula),
+            Paragraph("Sim" if r["pronto"] else "Não", celula),
         ])
-    tabela = Table(linhas, colWidths=[4.5 * cm, 1.5 * cm, 3 * cm, 3.5 * cm, 3 * cm, 1.5 * cm])
+    tabela = Table(linhas, colWidths=[5.0 * cm, 1.3 * cm, 2.6 * cm, 3.0 * cm, 3.6 * cm, 1.5 * cm], repeatRows=1)
     tabela.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1e3a8a")),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("FONTSIZE", (0, 0), (-1, -1), 8),
         ("GRID", (0, 0), (-1, -1), 0.3, colors.grey),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("LEFTPADDING", (0, 0), (-1, -1), 4),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+        ("TOPPADDING", (0, 0), (-1, -1), 3),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
     ]))
     story.append(tabela)
     story.append(Spacer(1, 0.3 * cm))
