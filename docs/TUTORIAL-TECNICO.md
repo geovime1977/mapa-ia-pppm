@@ -46,10 +46,10 @@ do usuário (exportar JSON) — o servidor não guarda nada entre sessões.
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt -r requirements-dev.txt
-.venv/bin/streamlit run app.py --server.port 8512
+.venv/bin/streamlit run app.py --server.port 8513
 ```
 
-Health check: `curl http://localhost:8512/_stcore/health` → `ok`.
+Health check: `curl http://localhost:8513/_stcore/health` → `ok`.
 
 ## Rodar testes
 
@@ -59,7 +59,7 @@ Health check: `curl http://localhost:8512/_stcore/health` → `ok`.
 
 ## Convenções
 
-- **Porta única do ecossistema:** 8512 (fora da faixa 8501-8511 já ocupada pelos apps irmãos do Geovane)
+- **Porta única do ecossistema:** 8513 (8501-8511 ocupadas pelos apps irmãos; 8512 é do `compras-po`)
 - **Nenhum comentário sobre "o quê" o código faz** — só sobre "por quê", quando não óbvio
 - **Sem error handling defensivo** — só validação em fronteiras (upload JSON, entrada do usuário)
 - **Referências à aula** ficam nos JSONs em `data/`, campo `referencia`
@@ -100,7 +100,7 @@ rclone copy ~/projetos/mapa-ia-pppm onedrive-eixoestrategico10:repos/mapa-ia-ppp
 | App | Porta | Escopo |
 |---|---|---|
 | diag-ia-pppm | 8511 | Diagnóstico 5D + Mapa 5 Blocos + 3 pilotos + PDF (Aula 1 completa) |
-| **mapa-ia-pppm** | **8512** | **Diagnóstico + Mapa + Priorização + Governança HITL (Aulas 1+2)** |
+| **mapa-ia-pppm** | **8513** | **Diagnóstico + Mapa + Priorização + Governança HITL (Aulas 1+2)** |
 | consultor-ia-pppm | 8509 | Consultor completo do curso (todas as aulas) |
 
 Este app foca no aluno individual construindo seu Mapa Executivo em uma única sessão.

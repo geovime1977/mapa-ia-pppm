@@ -30,10 +30,10 @@ Tudo fica no seu navegador (session_state). Nada é enviado ao servidor.
 ## Como usar
 
 ```bash
-.venv/bin/streamlit run app.py --server.port 8512
+.venv/bin/streamlit run app.py --server.port 8513
 ```
 
-Abre no navegador em `http://localhost:8512`. Percorra as abas na ordem.
+Abre no navegador em `http://localhost:8513`. Percorra as abas na ordem.
 
 **Dica:** no fim, use "Exportar JSON" na barra lateral para salvar seu progresso.
 Da próxima vez, "Importar JSON" reconstrói tudo.
@@ -46,6 +46,6 @@ Isso é o "corte obrigatório" da Aula 2 (slide 30).
 
 ## Se der erro
 
-- **Porta 8512 ocupada:** troque com `--server.port 8513`
+- **Porta 8513 ocupada:** troque com `--server.port 8514`
 - **PDF não gera:** cheque se preencheu ao menos Contexto e Diagnóstico
 - **JSON importado não carrega:** confirme que foi exportado por este app
