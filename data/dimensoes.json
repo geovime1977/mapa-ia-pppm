@@ -1,0 +1,42 @@
+{
+  "dimensoes": [
+    {
+      "id": "estrategia_valor",
+      "rotulo": "Estratégia e valor",
+      "descricao": "IA está alinhada aos objetivos de negócio e à estratégia de portfólio?",
+      "referencia": "Aula 1 · slide 27"
+    },
+    {
+      "id": "dados_processos",
+      "rotulo": "Dados e processos",
+      "descricao": "Há dados limpos, acessíveis e processos que sustentam a análise?",
+      "referencia": "Aula 1 · slide 27"
+    },
+    {
+      "id": "casos_uso",
+      "rotulo": "Casos de uso",
+      "descricao": "Há casos concretos, com dor identificada e dono, rodando ou pilotados?",
+      "referencia": "Aula 1 · slide 27"
+    },
+    {
+      "id": "governanca_hitl",
+      "rotulo": "Governança e HITL",
+      "descricao": "Existe validação humana, ética, rastreabilidade e controle sobre as decisões?",
+      "referencia": "Aula 1 · slide 27"
+    },
+    {
+      "id": "beneficios_roi",
+      "rotulo": "Benefícios e ROI",
+      "descricao": "O valor gerado é medido, comunicado e sustentado ao longo do tempo?",
+      "referencia": "Aula 1 · slide 27"
+    }
+  ],
+  "blocos_mapa": [
+    {"id": "contexto", "rotulo": "Contexto", "pergunta": "Qual projeto, processo ou área será analisado?"},
+    {"id": "dor", "rotulo": "Dor", "pergunta": "Qual problema real precisa ser resolvido?"},
+    {"id": "dados", "rotulo": "Dados", "pergunta": "Que informações existem para apoiar a decisão?"},
+    {"id": "riscos", "rotulo": "Riscos", "pergunta": "O que exige validação humana, ética ou segurança?"},
+    {"id": "valor", "rotulo": "Valor", "pergunta": "Que benefício executivo pode ser gerado?"}
+  ],
+  "referencia_aula": "Aula 1 · slide 33 (5 perguntas orientadoras) e slide 35 (entregável: Mapa Inicial)"
+}

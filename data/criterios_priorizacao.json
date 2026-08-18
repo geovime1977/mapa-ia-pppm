@@ -1,0 +1,89 @@
+{
+  "criterios": [
+    {
+      "id": "impacto",
+      "rotulo": "Impacto no resultado",
+      "peso": 0.30,
+      "descricao": "Quanto esse caso melhora resultado, prazo, custo, qualidade, risco ou satisfação do cliente?",
+      "perguntas": [
+        "Afeta decisão crítica?",
+        "Reduz dor relevante?",
+        "Melhora indicadores do projeto?"
+      ],
+      "referencia": "Aula 2 · slide 24"
+    },
+    {
+      "id": "viabilidade",
+      "rotulo": "Viabilidade técnica",
+      "peso": 0.20,
+      "descricao": "É possível implementar com tecnologia, orçamento, tempo, pessoas e processo disponíveis?",
+      "perguntas": [
+        "Existe capacidade técnica?",
+        "Pode começar pequeno?",
+        "Depende de integração complexa?"
+      ],
+      "referencia": "Aula 2 · slide 25"
+    },
+    {
+      "id": "dados",
+      "rotulo": "Dados disponíveis",
+      "peso": 0.20,
+      "descricao": "Os dados necessários existem, são acessíveis, confiáveis e suficientes para apoiar a recomendação?",
+      "perguntas": [
+        "Dados são limpos?",
+        "Há histórico relevante?",
+        "Existe dono dos dados?"
+      ],
+      "referencia": "Aula 2 · slide 27"
+    },
+    {
+      "id": "risco",
+      "rotulo": "Risco / segurança",
+      "peso": 0.15,
+      "descricao": "Quais riscos éticos, legais, operacionais, reputacionais ou de segurança podem surgir? (Nota alta = risco BAIXO / bem controlado)",
+      "perguntas": [
+        "Existe risco de decisão indevida?",
+        "Há dados sensíveis?",
+        "O erro da IA seria crítico?"
+      ],
+      "referencia": "Aula 2 · slide 26"
+    },
+    {
+      "id": "valor",
+      "rotulo": "Valor potencial",
+      "peso": 0.15,
+      "descricao": "Qual benefício executivo pode ser demonstrado, medido e comunicado?",
+      "perguntas": [
+        "ROI ou economia?",
+        "Velocidade de decisão?",
+        "Redução de risco ou retrabalho?"
+      ],
+      "referencia": "Aula 2 · slide 28"
+    }
+  ],
+  "escala_nota": {
+    "min": 1,
+    "max": 5,
+    "obs": "Nota 1 (muito baixo) a 5 (muito alto). Nota × peso somada nos 5 critérios → score de 1 a 5."
+  },
+  "faixas_ranking": [
+    {"id": "fazer_agora", "rotulo": "Fazer agora", "score_min": 4.0, "cor": "#22c55e"},
+    {"id": "preparar", "rotulo": "Preparar", "score_min": 3.0, "cor": "#f59e0b"},
+    {"id": "nao_priorizar", "rotulo": "Não priorizar", "score_min": 0.0, "cor": "#ef4444"}
+  ],
+  "corte_obrigatorio": {
+    "regra": "Sem dono humano da decisão declarado, o caso NÃO está pronto independentemente do score.",
+    "referencia": "Aula 2 · slide 30 (Corte obrigatório)"
+  },
+  "matriz_impacto_viabilidade": {
+    "descricao": "Localiza cada caso antes de aplicar filtros de risco/dados/governança.",
+    "quadrantes": [
+      {"nome": "Comece aqui", "faixa": "Alto impacto + Alta viabilidade", "cor": "#22c55e"},
+      {"nome": "Investigue", "faixa": "Alto impacto + Baixa viabilidade", "cor": "#3b82f6"},
+      {"nome": "Baixa prioridade", "faixa": "Baixo impacto + Alta viabilidade", "cor": "#a3a3a3"},
+      {"nome": "Evite agora", "faixa": "Baixo impacto + Baixa viabilidade", "cor": "#ef4444"}
+    ],
+    "referencia": "Aula 2 · slide 29"
+  },
+  "referencia_aula": "Aula 2 · slide 30 (score executivo com pesos)"
+}

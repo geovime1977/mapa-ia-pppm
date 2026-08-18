@@ -1,0 +1,41 @@
+{
+  "principio_de_ouro": "Quanto maior o impacto da decisão, maior deve ser a validação humana.",
+  "principio_de_ouro_ref": "Aula 2 · slide 33",
+  "blocos_seguranca": [
+    {"id": "dados_sensiveis", "titulo": "Dados sensíveis", "regra": "Classifique informações e evite exposição indevida.", "referencia": "Aula 2 · slide 32"},
+    {"id": "acessos", "titulo": "Acessos", "regra": "Defina quem pode consultar, treinar, editar ou decidir.", "referencia": "Aula 2 · slide 32"},
+    {"id": "ambiente_seguro", "titulo": "Ambiente seguro", "regra": "Evite inserir dados confidenciais em ferramentas sem política clara.", "referencia": "Aula 2 · slide 32"},
+    {"id": "controle_uso", "titulo": "Controle de uso", "regra": "Registre finalidade, dono, permissões e limites.", "referencia": "Aula 2 · slide 32"}
+  ],
+  "riscos_eticos": [
+    "Recomendações injustas ou enviesadas.",
+    "Ausência de explicação para decisões críticas.",
+    "Uso de dados sem autorização ou finalidade clara.",
+    "Dependência cega da recomendação da IA."
+  ],
+  "riscos_eticos_ref": "Aula 2 · slide 33",
+  "rastreabilidade": [
+    {"id": "entrada", "titulo": "Entrada", "descricao": "Dados usados", "referencia": "Aula 2 · slide 34"},
+    {"id": "processamento", "titulo": "Processamento", "descricao": "Prompt, modelo e regra", "referencia": "Aula 2 · slide 34"},
+    {"id": "saida", "titulo": "Saída", "descricao": "Recomendação gerada", "referencia": "Aula 2 · slide 34"},
+    {"id": "validacao", "titulo": "Validação", "descricao": "Humano aprova ou ajusta", "referencia": "Aula 2 · slide 34"},
+    {"id": "registro", "titulo": "Registro", "descricao": "Decisão e evidência", "referencia": "Aula 2 · slide 34"}
+  ],
+  "papeis_hitl": [
+    {"id": "ia", "papel": "IA recomenda", "responsabilidade": "Gera análise, alerta, cenário ou sugestão.", "referencia": "Aula 2 · slide 35"},
+    {"id": "humano", "papel": "Humano valida", "responsabilidade": "Verifica contexto, ética, risco e coerência.", "referencia": "Aula 2 · slide 35"},
+    {"id": "gestor", "papel": "Gestor decide", "responsabilidade": "Assume a decisão e registra evidências.", "referencia": "Aula 2 · slide 35"}
+  ],
+  "workflow_validacao": [
+    "IA gera recomendação",
+    "Consultor verifica dados e contexto",
+    "Especialista valida riscos e regras",
+    "Gestor decide e registra"
+  ],
+  "workflow_validacao_ref": "Aula 2 · slide 36",
+  "niveis_hitl": [
+    {"id": "leve", "score_impacto_min": 1, "score_impacto_max": 2, "aprovador": "PM ou analista", "descricao": "Validação leve — checagem pontual."},
+    {"id": "estruturada", "score_impacto_min": 3, "score_impacto_max": 4, "aprovador": "Especialista + PM", "descricao": "Validação estruturada — dupla checagem antes da decisão."},
+    {"id": "executiva", "score_impacto_min": 5, "score_impacto_max": 5, "aprovador": "Sponsor / comitê executivo", "descricao": "Validação executiva formal — registro em ata obrigatório."}
+  ]
+}

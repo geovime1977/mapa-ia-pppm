@@ -1,0 +1,34 @@
+{
+  "escala_por_dimensao": {
+    "min": 0,
+    "max": 6,
+    "obs": "Cada dimensão recebe nota 0-6 no diagnóstico rápido do aluno; total do diagnóstico vai de 0 a 30 (5 dims × 6)."
+  },
+  "niveis_maturidade": [
+    {
+      "numero": 0,
+      "rotulo": "Inexistente",
+      "descricao": "Nenhum uso estruturado de IA.",
+      "faixa_total": [0, 5]
+    },
+    {
+      "numero": 1,
+      "rotulo": "Reativo",
+      "descricao": "Uso pontual, sem método nem governança.",
+      "faixa_total": [6, 12]
+    },
+    {
+      "numero": 2,
+      "rotulo": "Experimental",
+      "descricao": "Pilotos isolados, aprendizado em curso.",
+      "faixa_total": [13, 20]
+    },
+    {
+      "numero": 3,
+      "rotulo": "Estruturado",
+      "descricao": "Governança, métricas e escala consolidadas.",
+      "faixa_total": [21, 30]
+    }
+  ],
+  "referencia_aula": "Aula 1 · slide 26 (Escala 0-3) e slide 29 (Empresa Alfa 12/30 — Nível 2/3 em transição)"
+}

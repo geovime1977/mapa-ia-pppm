@@ -1,0 +1,25 @@
+{
+  "cinco_erros": [
+    {"id": "erro1", "titulo": "Começar pela ferramenta", "descricao": "A pergunta certa não é \"qual IA vamos usar?\" e sim \"qual decisão, processo ou dor precisa melhorar?\"", "correcao": "Sem dor clara, a IA vira demonstração bonita e impacto pequeno.", "referencia": "Aula 2 · slide 8"},
+    {"id": "erro2", "titulo": "Escolher pelo fascínio técnico", "descricao": "Casos chamativos nem sempre são estratégicos.", "correcao": "Priorize problemas relevantes, não modismos.", "referencia": "Aula 2 · slide 9"},
+    {"id": "erro3", "titulo": "Ignorar dados e processos", "descricao": "Sem dados confiáveis e processo compreendido, a IA recomenda com baixa precisão e alto risco.", "correcao": "A qualidade da decisão começa antes do prompt.", "referencia": "Aula 2 · slide 10"},
+    {"id": "erro4", "titulo": "Confundir automação com decisão", "descricao": "Automatizar tarefas não significa delegar responsabilidade.", "correcao": "IA recomenda. O humano valida e decide.", "referencia": "Aula 2 · slide 11"},
+    {"id": "erro5", "titulo": "Não medir valor nem risco", "descricao": "Sem métricas, o piloto vira opinião. Sem governança, o resultado pode ser inseguro, injusto ou pouco rastreável.", "correcao": "Valor sem controle não sustenta escala.", "referencia": "Aula 2 · slide 12"}
+  ],
+  "sete_dominios": [
+    {"id": "diagnostico", "rotulo": "Diagnóstico", "resumo": "Leitura inicial da maturidade", "aplicacoes": ["Analisar histórico de projetos", "Encontrar causas recorrentes", "Mapear oportunidades de melhoria"], "referencia": "Aula 2 · slide 16"},
+    {"id": "riscos", "rotulo": "Riscos", "resumo": "Previsão e resposta", "aplicacoes": ["Detectar padrões de atraso", "Sugerir respostas a riscos", "Classificar severidade e urgência"], "referencia": "Aula 2 · slide 17"},
+    {"id": "comunicacao", "rotulo": "Comunicação", "resumo": "Relatórios e alinhamento", "aplicacoes": ["Resumo para patrocinador", "Ata e pendências automáticas", "Adaptação da linguagem por stakeholder"], "referencia": "Aula 2 · slide 18"},
+    {"id": "cronograma", "rotulo": "Cronograma", "resumo": "Prazos e dependências", "aplicacoes": ["Prever duração de tarefas", "Identificar gargalos", "Simular cenários de prazo"], "referencia": "Aula 2 · slide 19"},
+    {"id": "priorizacao", "rotulo": "Priorização", "resumo": "Portfólio e ROI", "aplicacoes": ["Rankear iniciativas", "Comparar benefícios e riscos", "Sugerir onde começar"], "referencia": "Aula 2 · slide 20"},
+    {"id": "dados", "rotulo": "Dados", "resumo": "Análise e padrões", "aplicacoes": ["Classificar informações", "Detectar anomalias", "Gerar painéis e narrativas"], "referencia": "Aula 2 · slide 21"},
+    {"id": "decisao", "rotulo": "Decisão", "resumo": "Recomendação executiva", "aplicacoes": ["Recomendar cenários", "Explicitar premissas", "Apoiar decisões executivas"], "referencia": "Aula 2 · slide 22"}
+  ],
+  "casos_alfa": [
+    {"id": "alfa_a", "rotulo": "Caso A — Relatório executivo automático", "descricao": "Relatório executivo automático para patrocinadores.", "dor": "Consolidação semanal de status consome horas e sai com atraso.", "dados": "Status reports Jira, atas de comitê, plano de riscos.", "decisao": "Publicar resumo executivo semanal aprovado pelo PMO.", "valor": "Redução do tempo de consolidação e publicação em D+1.", "referencia": "Aula 2 · slide 37"},
+    {"id": "alfa_b", "rotulo": "Caso B — Análise preditiva de atrasos", "descricao": "Análise preditiva de atrasos e dependências críticas.", "dor": "Atrasos em dependências críticas só aparecem depois do impacto.", "dados": "Histórico de cronogramas MS Project + registro de atrasos.", "decisao": "Alertar gestor antes de risco alto de atraso.", "valor": "Redução de atrasos maiores que 15 dias.", "referencia": "Aula 2 · slide 37"},
+    {"id": "alfa_c", "rotulo": "Caso C — Priorização de portfólio", "descricao": "Priorização de portfólio com critérios de ROI e risco.", "dor": "Priorização atual é política; alta gestão pede critério auditável.", "dados": "Business cases, planilha ROI, matriz de risco corporativa.", "decisao": "Ranquear iniciativas trimestralmente.", "valor": "Realocação do CAPEX para o top da carteira.", "referencia": "Aula 2 · slide 37"},
+    {"id": "alfa_d", "rotulo": "Caso D — Chatbot interno de metodologia", "descricao": "Chatbot interno para dúvidas de metodologia.", "dor": "PMs iniciantes pedem apoio de metodologia; resposta demora dias.", "dados": "Base PMBOK + manual interno + FAQs.", "decisao": "Responder dúvida em minutos ao PM.", "valor": "Redução do backlog de dúvidas do PMO.", "referencia": "Aula 2 · slide 37"}
+  ],
+  "referencia_geral": "Aula 2 · slides 7-22, 37"
+}
