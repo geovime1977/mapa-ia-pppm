@@ -173,12 +173,17 @@ with abas[3]:
             )
             st.divider()
 
+    # Streamlit proíbe escrever em session_state[key] depois do widget existir;
+    # usamos uma flag processada ANTES do widget na próxima execução.
+    if st.session_state.pop("_limpar_novo_rotulo", False):
+        st.session_state["novo_rotulo"] = ""
+
     with st.expander("➕ Adicionar novo caso"):
         novo_rotulo = st.text_input("Rótulo do caso", key="novo_rotulo")
         if st.button("Criar caso"):
             if novo_rotulo.strip():
                 st.session_state["casos_uso"].append(priorizacao.novo_caso(novo_rotulo.strip()))
-                st.session_state["novo_rotulo"] = ""
+                st.session_state["_limpar_novo_rotulo"] = True
                 st.rerun()
             else:
                 st.warning("Dê um rótulo curto ao caso.")
