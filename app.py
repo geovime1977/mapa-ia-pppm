@@ -14,6 +14,35 @@ import streamlit as st
 _EXEMPLOS_DIR = Path(__file__).parent / "data" / "exemplos"
 
 
+def _aplicar_dados_importados(dados: dict) -> None:
+    """Aplica dados importados no session_state. Também sincroniza as keys dos
+    widgets que fixam nome (Diagnóstico e Mapa) — sem isso o Streamlit ignora
+    o novo value e mantém o antigo, que é o bug reportado na aula."""
+    for k, v in dados.items():
+        st.session_state[k] = v
+    for k, v in (dados.get("diagnostico") or {}).items():
+        st.session_state[f"diag_{k}"] = int(v or 0)
+    for k, v in (dados.get("mapa") or {}).items():
+        st.session_state[f"mapa_{k}"] = v or ""
+    for caso in (dados.get("casos_uso") or []):
+        cid = caso.get("id")
+        if not cid:
+            continue
+        st.session_state[f"rot_{cid}"] = caso.get("rotulo", "")
+        st.session_state[f"desc_{cid}"] = caso.get("descricao", "")
+        st.session_state[f"dor_{cid}"] = caso.get("dor", "")
+        st.session_state[f"dono_{cid}"] = caso.get("dono", "")
+        for crit_id, nota in (caso.get("notas") or {}).items():
+            st.session_state[f"nota_{cid}_{crit_id}"] = int(nota or 3)
+    for cid, gov in (dados.get("governanca") or {}).items():
+        for bid, v in (gov.get("seguranca") or {}).items():
+            st.session_state[f"seg_{cid}_{bid}"] = bool(v)
+        for rid, v in (gov.get("rastreabilidade") or {}).items():
+            st.session_state[f"rast_{cid}_{rid}"] = v or ""
+        st.session_state[f"aprov_{cid}"] = gov.get("aprovador", "")
+        st.session_state[f"regdec_{cid}"] = bool(gov.get("decisao_registrada", False))
+
+
 def _listar_exemplos_prontos() -> list[dict]:
     """Lê data/exemplos/_index.json e retorna metadados + payload de cada exemplo.
     Definida no app.py (não em data_loader) para evitar problemas de hot-reload
@@ -68,8 +97,7 @@ with st.sidebar:
     if upload is not None:
         try:
             dados = import_export.importar(upload.getvalue())
-            for k, v in dados.items():
-                st.session_state[k] = v
+            _aplicar_dados_importados(dados)
             st.success("Mapa importado.")
         except Exception as exc:
             st.error(f"Falha na importação: {exc}")
@@ -89,8 +117,7 @@ with st.sidebar:
     for ex in _listar_exemplos_prontos():
         if st.button(ex["botao"], key=f"ex_{ex['id']}", use_container_width=True, help=ex["descricao"]):
             dados = import_export.importar(json.dumps(ex["payload"]))
-            for k, v in dados.items():
-                st.session_state[k] = v
+            _aplicar_dados_importados(dados)
             st.success(f"Exemplo '{ex['botao']}' carregado.")
             st.rerun()
 
