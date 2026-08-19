@@ -7,8 +7,31 @@ Aula 2 (5 erros, 7 domínios, priorização, governança HITL) do Prof. Bezerra.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import streamlit as st
+
+_EXEMPLOS_DIR = Path(__file__).parent / "data" / "exemplos"
+
+
+def _listar_exemplos_prontos() -> list[dict]:
+    """Lê data/exemplos/_index.json e retorna metadados + payload de cada exemplo.
+    Definida no app.py (não em data_loader) para evitar problemas de hot-reload
+    parcial no Streamlit Cloud."""
+    indice_path = _EXEMPLOS_DIR / "_index.json"
+    if not indice_path.exists():
+        return []
+    with open(indice_path, encoding="utf-8") as f:
+        indice = json.load(f)["exemplos"]
+    resultado: list[dict] = []
+    for item in indice:
+        arq = _EXEMPLOS_DIR / item["arquivo"]
+        if not arq.exists():
+            continue
+        with open(arq, encoding="utf-8") as f:
+            item = {**item, "payload": json.load(f)}
+        resultado.append(item)
+    return resultado
 
 from src import (
     data_loader,
@@ -63,7 +86,7 @@ with st.sidebar:
     st.divider()
     st.subheader("Exemplos prontos")
     st.caption("Carrega um cenário completo com 1 clique. Sobrescreve o mapa atual.")
-    for ex in data_loader.exemplos_prontos():
+    for ex in _listar_exemplos_prontos():
         if st.button(ex["botao"], key=f"ex_{ex['id']}", use_container_width=True, help=ex["descricao"]):
             dados = import_export.importar(json.dumps(ex["payload"]))
             for k, v in dados.items():
