@@ -173,6 +173,41 @@ with abas[3]:
             )
             st.divider()
 
+    with st.expander("🎯 Carregar caso-exemplo pronto para editar"):
+        st.caption("Adiciona 1 caso já pontuado como ponto de partida. Depois é só ajustar os textos e as notas ao seu contexto real.")
+        col_ex1, col_ex2 = st.columns(2)
+        _templates = [
+            {
+                "rotulo": "Relatório executivo automático de portfólio",
+                "descricao": "Pipeline que consome status reports do Jira, atas de comitê e plano de riscos, gera resumo executivo semanal em Markdown/PDF e publica para o board.",
+                "dor": "Consolidação semanal do portfólio consome 2 dias do PMO e chega ao comitê com atraso; hoje é feita à mão em PowerPoint.",
+                "dono": "Diretor de PMO",
+                "notas": {"impacto": 5, "viabilidade": 5, "dados": 4, "risco": 4, "valor": 5},
+                "col": col_ex1,
+                "botao": "🚀 Fazer agora (score 4.65)",
+            },
+            {
+                "rotulo": "Análise preditiva de atrasos em dependências",
+                "descricao": "Modelo que aprende do histórico de cronogramas para prever atrasos em dependências críticas antes do impacto no projeto.",
+                "dor": "Atrasos em dependências críticas só aparecem depois de já terem estourado o cronograma.",
+                "dono": "Coordenação de projetos",
+                "notas": {"impacto": 5, "viabilidade": 2, "dados": 3, "risco": 3, "valor": 4},
+                "col": col_ex2,
+                "botao": "🔍 Investigue (score 3.55)",
+            },
+        ]
+        for tpl in _templates:
+            with tpl["col"]:
+                if st.button(tpl["botao"], key=f"tpl_{tpl['rotulo'][:10]}", use_container_width=True):
+                    novo = priorizacao.novo_caso(tpl["rotulo"])
+                    novo["descricao"] = tpl["descricao"]
+                    novo["dor"] = tpl["dor"]
+                    novo["dono"] = tpl["dono"]
+                    novo["notas"].update(tpl["notas"])
+                    st.session_state["casos_uso"].append(novo)
+                    st.success(f"Caso '{tpl['rotulo']}' carregado. Role para baixo para editar.")
+                    st.rerun()
+
     # Streamlit proíbe escrever em session_state[key] depois do widget existir;
     # usamos uma flag processada ANTES do widget na próxima execução.
     if st.session_state.pop("_limpar_novo_rotulo", False):
