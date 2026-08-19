@@ -1,0 +1,198 @@
+{
+  "app": "mapa-ia-pppm",
+  "versao": "1.0",
+  "gerado_em": "2026-08-19T05:51:56",
+  "dados": {
+    "contexto": {
+      "nome": "Camila Fernandes",
+      "empresa": "LogiSul Transportes",
+      "porte": "Media",
+      "cargo": "Gerente de PMO",
+      "n_projetos": 12,
+      "pmo_ativo": true
+    },
+    "diagnostico": {
+      "estrategia_valor": 3,
+      "dados_processos": 3,
+      "casos_uso": 4,
+      "governanca_hitl": 3,
+      "beneficios_roi": 2
+    },
+    "mapa": {
+      "contexto": "PMO de operadora logistica com 12 projetos ativos em transformacao digital.",
+      "dor": "Portfolio decidido sem criterio auditavel; comite pede transparencia trimestral.",
+      "dados": "Business cases, planilha ROI, matriz de risco, status reports Jira.",
+      "riscos": "Recomendacao errada realoca CAPEX; dados de clientes B2B; comite exige rastreabilidade.",
+      "valor": "Decisao auditavel de priorizacao trimestral com base em criterios uniformes."
+    },
+    "casos_uso": [
+      {
+        "id": "2a266c5a",
+        "rotulo": "Relatorio executivo automatico de portfolio",
+        "descricao": "Pipeline que consome Jira + atas + risco e gera resumo executivo semanal.",
+        "dor": "Consolidacao do portfolio consome 2 dias e chega atrasada ao comite.",
+        "dono": "Diretor de PMO",
+        "notas": {
+          "impacto": 5,
+          "viabilidade": 5,
+          "dados": 4,
+          "risco": 4,
+          "valor": 5
+        }
+      },
+      {
+        "id": "1d74e04c",
+        "rotulo": "Priorizacao trimestral de portfolio com IA",
+        "descricao": "Score auditavel para ranquear projetos por impacto e risco a cada trimestre.",
+        "dor": "Priorizacao hoje e politica; alta gestao exige criterio auditavel.",
+        "dono": "Comite executivo",
+        "notas": {
+          "impacto": 5,
+          "viabilidade": 4,
+          "dados": 4,
+          "risco": 4,
+          "valor": 5
+        }
+      },
+      {
+        "id": "c05de842",
+        "rotulo": "Analise preditiva de atrasos em dependencias",
+        "descricao": "Modelo que aprende do historico para prever atraso critico antes do impacto.",
+        "dor": "Atrasos em dependencias so aparecem depois de estourar o cronograma.",
+        "dono": "Coordenacao de projetos",
+        "notas": {
+          "impacto": 5,
+          "viabilidade": 2,
+          "dados": 3,
+          "risco": 3,
+          "valor": 4
+        }
+      },
+      {
+        "id": "e7b20c7f",
+        "rotulo": "Chatbot interno de metodologia",
+        "descricao": "Assistente para PMs iniciantes com base em PMBOK + manual interno.",
+        "dor": "PMs iniciantes esperam dias por resposta de metodologia.",
+        "dono": "PMO corporativo",
+        "notas": {
+          "impacto": 2,
+          "viabilidade": 5,
+          "dados": 3,
+          "risco": 3,
+          "valor": 2
+        }
+      },
+      {
+        "id": "f7d0297d",
+        "rotulo": "Geracao automatica de EAP a partir de contrato",
+        "descricao": "Extrai escopo do contrato assinado e propoe EAP inicial em arvore.",
+        "dor": "EAP inicial de projeto novo consome 3 dias do PM em copiar-colar.",
+        "dono": "",
+        "notas": {
+          "impacto": 2,
+          "viabilidade": 2,
+          "dados": 2,
+          "risco": 2,
+          "valor": 2
+        }
+      }
+    ],
+    "governanca": {
+      "2a266c5a": {
+        "caso_id": "2a266c5a",
+        "rastreabilidade": {
+          "entrada": "Status reports Jira exportados semanalmente",
+          "processamento": "LLM com template estruturado revisado pelo PMO",
+          "saida": "Resumo executivo em PDF + Markdown",
+          "validacao": "PMO revisa em ate 30min antes de publicar",
+          "registro": "Publicado no SharePoint corporativo com timestamp"
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": true,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Diretor de PMO",
+        "decisao_registrada": true
+      },
+      "1d74e04c": {
+        "caso_id": "1d74e04c",
+        "rastreabilidade": {
+          "entrada": "Business cases + risk register",
+          "processamento": "Score SAPEVO-M ponderado",
+          "saida": "Ranking trimestral",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": false,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Comite executivo",
+        "decisao_registrada": false
+      },
+      "c05de842": {
+        "caso_id": "c05de842",
+        "rastreabilidade": {
+          "entrada": "Historico MS Project",
+          "processamento": "",
+          "saida": "",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": false,
+          "ambiente_seguro": false,
+          "controle_uso": false
+        },
+        "riscos_marcados": [],
+        "aprovador": "",
+        "decisao_registrada": false
+      },
+      "e7b20c7f": {
+        "caso_id": "e7b20c7f",
+        "rastreabilidade": {
+          "entrada": "",
+          "processamento": "",
+          "saida": "",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": false,
+          "acessos": false,
+          "ambiente_seguro": false,
+          "controle_uso": false
+        },
+        "riscos_marcados": [],
+        "aprovador": "",
+        "decisao_registrada": false
+      },
+      "f7d0297d": {
+        "caso_id": "f7d0297d",
+        "rastreabilidade": {
+          "entrada": "",
+          "processamento": "",
+          "saida": "",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": false,
+          "acessos": false,
+          "ambiente_seguro": false,
+          "controle_uso": false
+        },
+        "riscos_marcados": [],
+        "aprovador": "",
+        "decisao_registrada": false
+      }
+    }
+  }
+}

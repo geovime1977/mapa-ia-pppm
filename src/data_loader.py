@@ -37,3 +37,14 @@ def exemplos() -> dict:
 @lru_cache(maxsize=1)
 def governanca() -> dict:
     return _ler("governanca.json")
+
+
+@lru_cache(maxsize=1)
+def exemplos_prontos() -> list[dict]:
+    """Metadados + conteúdo dos JSONs de aluno em data/exemplos/."""
+    indice = _ler("exemplos/_index.json")["exemplos"]
+    resultado: list[dict] = []
+    for item in indice:
+        payload = _ler(f"exemplos/{item['arquivo']}")
+        resultado.append({**item, "payload": payload})
+    return resultado

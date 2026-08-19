@@ -1,0 +1,132 @@
+{
+  "app": "mapa-ia-pppm",
+  "versao": "1.0",
+  "gerado_em": "2026-08-19T05:51:56",
+  "dados": {
+    "contexto": {
+      "nome": "Rafael Pinto",
+      "empresa": "Metalurgica Sao Bento",
+      "porte": "PME",
+      "cargo": "Diretor industrial",
+      "n_projetos": 3,
+      "pmo_ativo": false
+    },
+    "diagnostico": {
+      "estrategia_valor": 2,
+      "dados_processos": 1,
+      "casos_uso": 2,
+      "governanca_hitl": 1,
+      "beneficios_roi": 3
+    },
+    "mapa": {
+      "contexto": "Fabrica de pecas metalicas com 45 funcionarios em Contagem/MG.",
+      "dor": "Producao registra tudo em papel; nao tem indicador confiavel e diretoria toma decisao no achismo.",
+      "dados": "Cadernos de OS na fabrica, planilhas Excel do PCP, sistema legado de faturamento.",
+      "riscos": "Dados de cliente e preco de venda sao sensiveis; qualquer IA precisa passar por auditoria interna primeiro.",
+      "valor": "Ter numero de producao real ate as 8h do dia seguinte para tomar decisao de reprogramacao."
+    },
+    "casos_uso": [
+      {
+        "id": "cd3aae1d",
+        "rotulo": "OCR de ordens de servico manuscritas",
+        "descricao": "Ler as OS preenchidas no chao de fabrica em papel e digitalizar em planilha.",
+        "dor": "Digitacao manual das OS consome 4h/dia do apontador e gera 15% de erros de dados.",
+        "dono": "Supervisor de producao",
+        "notas": {
+          "impacto": 4,
+          "viabilidade": 4,
+          "dados": 3,
+          "risco": 3,
+          "valor": 4
+        }
+      },
+      {
+        "id": "33f854a9",
+        "rotulo": "Previsao simples de demanda por SKU",
+        "descricao": "Modelo simples que projeta vendas dos proximos 3 meses por produto.",
+        "dor": "Compras hoje sao no feeling e sobra estoque de item errado.",
+        "dono": "Gerente comercial",
+        "notas": {
+          "impacto": 4,
+          "viabilidade": 2,
+          "dados": 2,
+          "risco": 3,
+          "valor": 4
+        }
+      },
+      {
+        "id": "c5d3d319",
+        "rotulo": "Chatbot institucional no site",
+        "descricao": "Bot que responde perguntas basicas sobre produtos e prazos.",
+        "dor": "Time comercial responde WhatsApp genericos e nao foca em fechar vendas.",
+        "dono": "",
+        "notas": {
+          "impacto": 2,
+          "viabilidade": 4,
+          "dados": 2,
+          "risco": 2,
+          "valor": 2
+        }
+      }
+    ],
+    "governanca": {
+      "cd3aae1d": {
+        "caso_id": "cd3aae1d",
+        "rastreabilidade": {
+          "entrada": "Fotos das OS",
+          "processamento": "OCR + regra de validacao",
+          "saida": "",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": false,
+          "controle_uso": false
+        },
+        "riscos_marcados": [],
+        "aprovador": "Supervisor de producao",
+        "decisao_registrada": false
+      },
+      "33f854a9": {
+        "caso_id": "33f854a9",
+        "rastreabilidade": {
+          "entrada": "",
+          "processamento": "",
+          "saida": "",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": false,
+          "acessos": false,
+          "ambiente_seguro": false,
+          "controle_uso": false
+        },
+        "riscos_marcados": [],
+        "aprovador": "",
+        "decisao_registrada": false
+      },
+      "c5d3d319": {
+        "caso_id": "c5d3d319",
+        "rastreabilidade": {
+          "entrada": "",
+          "processamento": "",
+          "saida": "",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": false,
+          "acessos": false,
+          "ambiente_seguro": false,
+          "controle_uso": false
+        },
+        "riscos_marcados": [],
+        "aprovador": "",
+        "decisao_registrada": false
+      }
+    }
+  }
+}

@@ -6,6 +6,8 @@ Aula 2 (5 erros, 7 domínios, priorização, governança HITL) do Prof. Bezerra.
 
 from __future__ import annotations
 
+import json
+
 import streamlit as st
 
 from src import (
@@ -57,6 +59,17 @@ with st.sidebar:
         mime="application/json",
         use_container_width=True,
     )
+
+    st.divider()
+    st.subheader("Exemplos prontos")
+    st.caption("Carrega um cenário completo com 1 clique. Sobrescreve o mapa atual.")
+    for ex in data_loader.exemplos_prontos():
+        if st.button(ex["botao"], key=f"ex_{ex['id']}", use_container_width=True, help=ex["descricao"]):
+            dados = import_export.importar(json.dumps(ex["payload"]))
+            for k, v in dados.items():
+                st.session_state[k] = v
+            st.success(f"Exemplo '{ex['botao']}' carregado.")
+            st.rerun()
 
     st.divider()
     if st.button("🔄 Resetar tudo", type="secondary", use_container_width=True):

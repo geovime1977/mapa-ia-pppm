@@ -1,0 +1,28 @@
+{
+  "exemplos": [
+    {
+      "id": "pme_industrial",
+      "arquivo": "exemplo-1-pme-industrial.json",
+      "botao": "🏭 PME industrial · Nível 1",
+      "descricao": "Metalúrgica de 45 funcionários, sem PMO, dados no papel. 3 casos (1 bloqueado)."
+    },
+    {
+      "id": "media_logistica",
+      "arquivo": "exemplo-2-media-logistica.json",
+      "botao": "🚚 Logística · Nível 2",
+      "descricao": "Operadora logística com PMO ativo, 12 projetos. 5 casos cobrindo os 4 quadrantes."
+    },
+    {
+      "id": "grande_financeira",
+      "arquivo": "exemplo-3-grande-financeira.json",
+      "botao": "🏦 Banco · Nível 3",
+      "descricao": "Banco médio-porte com CoE de IA, 28 pilotos, HITL executivo consolidado."
+    },
+    {
+      "id": "orgao_publico",
+      "arquivo": "exemplo-4-orgao-publico.json",
+      "botao": "🏛️ Prefeitura · Nível 2",
+      "descricao": "Prefeitura de Niterói, governança rígida (LGPD+TCE), 4 casos (1 bloqueado)."
+    }
+  ]
+}

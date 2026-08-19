@@ -1,0 +1,165 @@
+{
+  "app": "mapa-ia-pppm",
+  "versao": "1.0",
+  "gerado_em": "2026-08-19T05:51:56",
+  "dados": {
+    "contexto": {
+      "nome": "Marta Oliveira",
+      "empresa": "Prefeitura Municipal de Niteroi",
+      "porte": "Orgao publico",
+      "cargo": "Coordenadora de inovacao",
+      "n_projetos": 7,
+      "pmo_ativo": true
+    },
+    "diagnostico": {
+      "estrategia_valor": 3,
+      "dados_processos": 2,
+      "casos_uso": 2,
+      "governanca_hitl": 4,
+      "beneficios_roi": 3
+    },
+    "mapa": {
+      "contexto": "Prefeitura de medio porte com secretarias de Administracao, Fazenda, Educacao e Saude conectadas.",
+      "dor": "Servidores gastam mais tempo em atividade meio (triagem, sumarizacao, resposta) do que em decisao publica.",
+      "dados": "Sistema de protocolo, base de licitacoes, portal do cidadao, indicadores educacionais SIMEC.",
+      "riscos": "LGPD do cidadao; Lei de Acesso a Informacao; TCE exige rastreabilidade total de qualquer decisao com IA.",
+      "valor": "Liberar 20% do tempo do servidor tecnico para decisao publica com base em evidencia."
+    },
+    "casos_uso": [
+      {
+        "id": "4e2c110e",
+        "rotulo": "Triagem inicial de licitacoes recebidas",
+        "descricao": "LLM classifica propostas por objeto e sinaliza itens de risco tecnico para o parecerista.",
+        "dor": "Comissao de licitacao recebe 200 propostas/mes; triagem inicial demora 5 dias.",
+        "dono": "Secretario de administracao",
+        "notas": {
+          "impacto": 4,
+          "viabilidade": 3,
+          "dados": 3,
+          "risco": 2,
+          "valor": 4
+        }
+      },
+      {
+        "id": "2fb4f25a",
+        "rotulo": "Sumarizacao de processos administrativos para o gabinete",
+        "descricao": "Resumo executivo de processo administrativo com pontos de decisao destacados.",
+        "dor": "Prefeito recebe 40 processos/semana; nao consegue ler tudo e decide no achismo.",
+        "dono": "Chefe de gabinete",
+        "notas": {
+          "impacto": 5,
+          "viabilidade": 4,
+          "dados": 3,
+          "risco": 3,
+          "valor": 5
+        }
+      },
+      {
+        "id": "53bab3a4",
+        "rotulo": "Chatbot de servicos ao cidadao no portal",
+        "descricao": "Bot responde duvidas sobre IPTU, alvara, taxa de lixo etc a partir da base de FAQ.",
+        "dor": "Ouvidoria recebe 800 chamados/mes com duvidas repetitivas.",
+        "dono": "Diretor de comunicacao",
+        "notas": {
+          "impacto": 3,
+          "viabilidade": 5,
+          "dados": 4,
+          "risco": 3,
+          "valor": 3
+        }
+      },
+      {
+        "id": "26346933",
+        "rotulo": "Analise preditiva de evasao escolar",
+        "descricao": "Modelo identifica alunos com risco alto de evadir para intervencao pedagogica.",
+        "dor": "Evasao de 8% no ensino medio; escolas sabem tarde demais.",
+        "dono": "",
+        "notas": {
+          "impacto": 5,
+          "viabilidade": 2,
+          "dados": 3,
+          "risco": 2,
+          "valor": 4
+        }
+      }
+    ],
+    "governanca": {
+      "4e2c110e": {
+        "caso_id": "4e2c110e",
+        "rastreabilidade": {
+          "entrada": "PDFs das propostas submetidas",
+          "processamento": "LLM com prompt calibrado + regras da Lei 14.133",
+          "saida": "Ficha de triagem com pontos de risco",
+          "validacao": "Parecerista tecnico da comissao valida antes do parecer final",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": false,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Presidente da comissao de licitacao",
+        "decisao_registrada": false
+      },
+      "2fb4f25a": {
+        "caso_id": "2fb4f25a",
+        "rastreabilidade": {
+          "entrada": "Processo administrativo em PDF do sistema SEI",
+          "processamento": "LLM + template com foco em pontos de decisao",
+          "saida": "Resumo executivo de 1 pagina + destaques",
+          "validacao": "Chefe de gabinete valida antes de encaminhar ao prefeito",
+          "registro": "Registrado no SEI como despacho auxiliar"
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": true,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Chefe de gabinete",
+        "decisao_registrada": true
+      },
+      "53bab3a4": {
+        "caso_id": "53bab3a4",
+        "rastreabilidade": {
+          "entrada": "Historico de chamados da ouvidoria",
+          "processamento": "LLM ancorado em base FAQ oficial",
+          "saida": "",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": false,
+          "acessos": false,
+          "ambiente_seguro": true,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Diretor de comunicacao",
+        "decisao_registrada": false
+      },
+      "26346933": {
+        "caso_id": "26346933",
+        "rastreabilidade": {
+          "entrada": "",
+          "processamento": "",
+          "saida": "",
+          "validacao": "",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": false,
+          "acessos": false,
+          "ambiente_seguro": false,
+          "controle_uso": false
+        },
+        "riscos_marcados": [],
+        "aprovador": "",
+        "decisao_registrada": false
+      }
+    }
+  }
+}

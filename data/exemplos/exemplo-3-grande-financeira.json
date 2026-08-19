@@ -1,0 +1,165 @@
+{
+  "app": "mapa-ia-pppm",
+  "versao": "1.0",
+  "gerado_em": "2026-08-19T05:51:56",
+  "dados": {
+    "contexto": {
+      "nome": "Ricardo Almeida",
+      "empresa": "Banco Alfa & Beta",
+      "porte": "Grande",
+      "cargo": "Head de transformacao digital",
+      "n_projetos": 28,
+      "pmo_ativo": true
+    },
+    "diagnostico": {
+      "estrategia_valor": 5,
+      "dados_processos": 5,
+      "casos_uso": 5,
+      "governanca_hitl": 5,
+      "beneficios_roi": 5
+    },
+    "mapa": {
+      "contexto": "Banco de medio porte com 3.500 funcionarios; area de IA governada por CoE proprio.",
+      "dor": "CoE de IA precisa demonstrar ROI dos 28 pilotos em curso e cortar 30% ate o final do ano.",
+      "dados": "Data lake proprio (Snowflake), feature store, catalogo de modelos MLflow, governanca de dados formal.",
+      "riscos": "BACEN + LGPD exigem rastreabilidade completa; qualquer decisao credito precisa de HITL executivo.",
+      "valor": "Reduzir custo/atendimento em 15% ao ano e liberar time senior para negocios de alto valor."
+    },
+    "casos_uso": [
+      {
+        "id": "2cf31c80",
+        "rotulo": "Copiloto de analise de credito PME",
+        "descricao": "LLM que le balanco + demonstrativo do proponente e sugere rating preliminar.",
+        "dor": "Analista senior gasta 40min por proposta; time nao vence a demanda dos gerentes.",
+        "dono": "Superintendente de credito",
+        "notas": {
+          "impacto": 5,
+          "viabilidade": 4,
+          "dados": 5,
+          "risco": 4,
+          "valor": 5
+        }
+      },
+      {
+        "id": "b351d0d1",
+        "rotulo": "Deteccao de fraude em pagamentos instantaneos",
+        "descricao": "Modelo em tempo real que classifica risco de cada Pix acima de R$ 5.000.",
+        "dor": "Fraudes em Pix crescem 3% ao mes; hoje so ha regra deterministica.",
+        "dono": "Head de riscos",
+        "notas": {
+          "impacto": 5,
+          "viabilidade": 4,
+          "dados": 5,
+          "risco": 3,
+          "valor": 5
+        }
+      },
+      {
+        "id": "806e33bf",
+        "rotulo": "Sumarizacao automatica de call de M&A",
+        "descricao": "Transcricao + LLM para gerar ata executiva e lista de pendencias em 5min.",
+        "dor": "Notas de reuniao demoram 2 dias para virar ata circulada.",
+        "dono": "Diretor de M&A",
+        "notas": {
+          "impacto": 3,
+          "viabilidade": 5,
+          "dados": 4,
+          "risco": 4,
+          "valor": 3
+        }
+      },
+      {
+        "id": "0e5f3371",
+        "rotulo": "Robo-advisor de investimentos para varejo",
+        "descricao": "Recomendacao de carteira automatizada por perfil de risco declarado.",
+        "dor": "Assessores nao vencem a demanda do novo canal digital.",
+        "dono": "Chief Investment Officer",
+        "notas": {
+          "impacto": 5,
+          "viabilidade": 3,
+          "dados": 4,
+          "risco": 2,
+          "valor": 4
+        }
+      }
+    ],
+    "governanca": {
+      "2cf31c80": {
+        "caso_id": "2cf31c80",
+        "rastreabilidade": {
+          "entrada": "Balancos e DRE do proponente extraidos da Receita",
+          "processamento": "LLM Claude + regras de compliance interno + modelo estatistico",
+          "saida": "Rating preliminar A-E com racional em PDF",
+          "validacao": "Analista senior valida em ate 15min antes do comite",
+          "registro": "Registrado no core bancario com log completo"
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": true,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Superintendente de credito",
+        "decisao_registrada": true
+      },
+      "b351d0d1": {
+        "caso_id": "b351d0d1",
+        "rastreabilidade": {
+          "entrada": "Stream de transacoes Pix em tempo real",
+          "processamento": "Modelo XGBoost + regras BACEN atualizadas mensalmente",
+          "saida": "Score 0-100 + acao (aprovar/bloquear/revisar)",
+          "validacao": "Analista de riscos revisa em 30s (bloqueios) ou 5min (revisar)",
+          "registro": "Registrado no SIEM + relatorio mensal BACEN"
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": true,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Head de riscos",
+        "decisao_registrada": true
+      },
+      "806e33bf": {
+        "caso_id": "806e33bf",
+        "rastreabilidade": {
+          "entrada": "Gravacao de audio da call M&A",
+          "processamento": "Whisper + LLM com prompt estruturado",
+          "saida": "Ata executiva em Markdown + lista de acoes",
+          "validacao": "Diretor de M&A revisa antes de circular",
+          "registro": "Publicado em pasta compartilhada com controle de versao"
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": true,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Diretor de M&A",
+        "decisao_registrada": true
+      },
+      "0e5f3371": {
+        "caso_id": "0e5f3371",
+        "rastreabilidade": {
+          "entrada": "Perfil suitability do cliente",
+          "processamento": "Modelo Markowitz + restricoes regulatorias",
+          "saida": "Carteira sugerida com racional",
+          "validacao": "Requer sponsor humano por operacao acima de R$100k",
+          "registro": ""
+        },
+        "seguranca": {
+          "dados_sensiveis": true,
+          "acessos": true,
+          "ambiente_seguro": true,
+          "controle_uso": true
+        },
+        "riscos_marcados": [],
+        "aprovador": "Chief Investment Officer",
+        "decisao_registrada": false
+      }
+    }
+  }
+}
