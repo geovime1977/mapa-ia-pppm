@@ -70,6 +70,7 @@ from src import (
     pdf as pdf_gen,
     priorizacao,
     state,
+    telemetria,
 )
 
 
@@ -109,6 +110,8 @@ with st.sidebar:
         file_name="mapa-ia-pppm.json",
         mime="application/json",
         use_container_width=True,
+        on_click=telemetria.enviar_uma_vez,
+        args=(state.get_all_data(), "export_json"),
     )
 
     st.divider()
@@ -125,6 +128,12 @@ with st.sidebar:
     if st.button("🔄 Resetar tudo", type="secondary", use_container_width=True):
         state.reset_state()
         st.rerun()
+
+    st.caption(
+        "Seus dados ficam só na sua sessão do navegador. Estatísticas anonimizadas "
+        "(notas, categorias, textos sem identificação pessoal) podem ser usadas para "
+        "melhoria pedagógica. Não coletamos nome, empresa ou cargo."
+    )
 
 
 # =============================================================================
@@ -425,6 +434,7 @@ with abas[5]:
     if st.button("📄 Gerar PDF", type="primary"):
         try:
             bytes_pdf = pdf_gen.gerar_pdf(state.get_all_data())
+            telemetria.enviar_uma_vez(state.get_all_data(), "gerar_pdf")
             st.success("PDF gerado.")
             st.download_button(
                 "⬇️ Baixar PDF",

@@ -45,3 +45,15 @@ rclone copy . onedrive-eixoestrategico10:repos/mapa-ia-pppm \
 - Nada é persistido no servidor — session_state Streamlit. Portabilidade via export JSON.
 - Corte obrigatório da Aula 2: caso sem dono humano declarado é bloqueado independente do score.
 - Todo conteúdo pedagógico vive em `data/*.json` — mudar o JSON muda o app sem tocar em código.
+
+## Telemetria (benchmark do professor)
+
+- Módulo: `src/telemetria.py` · deps: `gspread`, `google-auth`
+- Coleta anonimizada envia 1 linha por sessão para Google Sheet privada no clique de
+  Export JSON ou Gerar PDF; flag `_telemetria_enviada` evita duplicação por sessão
+- **Nunca sobem:** nome, empresa, cargo, dono nominal dos casos (só bool `tem_dono`)
+- Opt-out silencioso: aviso curto na sidebar informa uso anonimizado
+- Falha silenciosa: sem credenciais em `st.secrets` ou API off, o app funciona normal;
+  log de erro só em stderr do container
+- Setup completo em `docs/TELEMETRIA.md`; script one-shot: `scripts/init_telemetria.py`
+- Testes de anonimização em `tests/test_telemetria.py` (garantem que PII não vaza)

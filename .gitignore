@@ -7,3 +7,5 @@ output/
 *.pdf
 !docs/*.pdf
 ~$*
+.streamlit/secrets.toml
+*.credentials.json

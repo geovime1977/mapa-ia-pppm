@@ -3,6 +3,8 @@ no servidor. Portabilidade via JSON (import_export.py)."""
 
 from __future__ import annotations
 
+import uuid
+
 import streamlit as st
 
 from src import data_loader
@@ -49,6 +51,8 @@ def init_state() -> None:
                     st.session_state[chave].extend(default)
             else:
                 st.session_state[chave] = default
+    if "session_id" not in st.session_state:
+        st.session_state["session_id"] = uuid.uuid4().hex[:12]
 
 
 def reset_state() -> None:

@@ -2,3 +2,5 @@ streamlit>=1.40.0
 reportlab>=4.2.0
 plotly>=5.20.0
 pandas>=2.2.0
+gspread>=6.0.0
+google-auth>=2.29.0
