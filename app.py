@@ -144,12 +144,12 @@ abas = st.tabs([
 # 1. CONTEXTO
 # ---------------------------------------------------------------------------- #
 with abas[0]:
-    st.header("1. Contexto do aluno")
-    st.caption("Identifica você e sua organização. Isso vai para a capa do PDF.")
+    st.header("1. Contexto do cliente")
+    st.caption("Identifica o cliente e sua organização. Isso vai para a capa do PDF.")
     ctx = st.session_state["contexto"]
     col1, col2 = st.columns(2)
     with col1:
-        ctx["nome"] = st.text_input("Seu nome", value=ctx.get("nome", ""))
+        ctx["nome"] = st.text_input("Nome do cliente", value=ctx.get("nome", ""))
         ctx["empresa"] = st.text_input("Empresa / órgão", value=ctx.get("empresa", ""))
         ctx["cargo"] = st.text_input("Cargo / papel", value=ctx.get("cargo", ""))
     with col2:
