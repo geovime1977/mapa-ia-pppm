@@ -214,7 +214,7 @@ with abas[3]:
                 c1.metric("Score", f"{r['score']:.2f}")
                 c2.markdown(f"**Faixa**<br><span style='color:{r['faixa_cor']}'>■</span> {r['faixa']}", unsafe_allow_html=True)
                 c3.markdown(f"**Quadrante**<br><span style='color:{r['quadrante_cor']}'>■</span> {r['quadrante']}", unsafe_allow_html=True)
-                c4.markdown(f"**Pronto?**<br>{'✅ Sim' if r['pronto'] else '⛔ Não'}")
+                c4.markdown(f"**Pronto?**<br>{'✅ Sim' if r['pronto'] else '⛔ Não'}", unsafe_allow_html=True)
                 if not r["pronto"]:
                     st.warning(r["motivo_bloqueio"])
 
