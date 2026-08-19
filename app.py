@@ -174,8 +174,7 @@ with abas[3]:
             st.divider()
 
     with st.expander("🎯 Carregar caso-exemplo pronto para editar"):
-        st.caption("Adiciona 1 caso já pontuado como ponto de partida. Depois é só ajustar os textos e as notas ao seu contexto real.")
-        col_ex1, col_ex2 = st.columns(2)
+        st.caption("Adiciona 1 caso já pontuado como ponto de partida. Cada botão cobre um quadrante da matriz Impacto × Viabilidade. Depois é só ajustar textos e notas ao seu contexto.")
         _templates = [
             {
                 "rotulo": "Relatório executivo automático de portfólio",
@@ -183,8 +182,7 @@ with abas[3]:
                 "dor": "Consolidação semanal do portfólio consome 2 dias do PMO e chega ao comitê com atraso; hoje é feita à mão em PowerPoint.",
                 "dono": "Diretor de PMO",
                 "notas": {"impacto": 5, "viabilidade": 5, "dados": 4, "risco": 4, "valor": 5},
-                "col": col_ex1,
-                "botao": "🚀 Fazer agora (score 4.65)",
+                "botao": "🚀 Fazer agora · Comece aqui (4.65)",
             },
             {
                 "rotulo": "Análise preditiva de atrasos em dependências",
@@ -192,21 +190,39 @@ with abas[3]:
                 "dor": "Atrasos em dependências críticas só aparecem depois de já terem estourado o cronograma.",
                 "dono": "Coordenação de projetos",
                 "notas": {"impacto": 5, "viabilidade": 2, "dados": 3, "risco": 3, "valor": 4},
-                "col": col_ex2,
-                "botao": "🔍 Investigue (score 3.55)",
+                "botao": "🔍 Preparar · Investigue (3.55)",
+            },
+            {
+                "rotulo": "Chatbot interno de metodologia",
+                "descricao": "Assistente que responde dúvidas de PMs iniciantes sobre metodologia interna (templates, ritos, papéis) consultando a base PMBOK + manual corporativo.",
+                "dor": "PMs iniciantes esperam dias por resposta de metodologia; sênior gasta tempo respondendo pergunta repetida.",
+                "dono": "PMO corporativo",
+                "notas": {"impacto": 2, "viabilidade": 5, "dados": 3, "risco": 3, "valor": 2},
+                "botao": "⚠️ Não priorizar · Baixa prioridade (2.95)",
+            },
+            {
+                "rotulo": "Geração automática de EAP a partir de contrato",
+                "descricao": "Extrai escopo do contrato assinado e propõe uma EAP inicial em formato de árvore para o PM revisar.",
+                "dor": "EAP inicial de projeto novo consome 3 dias do PM em copiar-colar.",
+                "dono": "",  # DE PROPÓSITO: dispara o corte obrigatório da Aula 2 · slide 30
+                "notas": {"impacto": 2, "viabilidade": 2, "dados": 2, "risco": 2, "valor": 2},
+                "botao": "⛔ Evite agora · Bloqueado sem dono (2.00)",
             },
         ]
-        for tpl in _templates:
-            with tpl["col"]:
-                if st.button(tpl["botao"], key=f"tpl_{tpl['rotulo'][:10]}", use_container_width=True):
-                    novo = priorizacao.novo_caso(tpl["rotulo"])
-                    novo["descricao"] = tpl["descricao"]
-                    novo["dor"] = tpl["dor"]
-                    novo["dono"] = tpl["dono"]
-                    novo["notas"].update(tpl["notas"])
-                    st.session_state["casos_uso"].append(novo)
-                    st.success(f"Caso '{tpl['rotulo']}' carregado. Role para baixo para editar.")
-                    st.rerun()
+        # 2 linhas × 2 colunas
+        for linha in (_templates[:2], _templates[2:]):
+            cols = st.columns(2)
+            for tpl, col in zip(linha, cols):
+                with col:
+                    if st.button(tpl["botao"], key=f"tpl_{tpl['rotulo'][:12]}", use_container_width=True):
+                        novo = priorizacao.novo_caso(tpl["rotulo"])
+                        novo["descricao"] = tpl["descricao"]
+                        novo["dor"] = tpl["dor"]
+                        novo["dono"] = tpl["dono"]
+                        novo["notas"].update(tpl["notas"])
+                        st.session_state["casos_uso"].append(novo)
+                        st.success(f"Caso '{tpl['rotulo']}' carregado. Role para baixo para editar.")
+                        st.rerun()
 
     # Streamlit proíbe escrever em session_state[key] depois do widget existir;
     # usamos uma flag processada ANTES do widget na próxima execução.
