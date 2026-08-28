@@ -52,3 +52,27 @@ def test_importar_aceita_bytes():
     conteudo = import_export.exportar(_estado_exemplo()).encode("utf-8")
     restaurado = import_export.importar(conteudo)
     assert restaurado["contexto"]["nome"] == "Geovane"
+
+
+def test_recomendacao_texto_persiste_no_round_trip():
+    original = _estado_exemplo()
+    original["recomendacao_texto"] = "Recomendo priorizar o piloto Alfa."
+    conteudo = import_export.exportar(original)
+    restaurado = import_export.importar(conteudo)
+    assert restaurado["recomendacao_texto"] == "Recomendo priorizar o piloto Alfa."
+
+
+def test_importar_payload_v10_default_recomendacao_vazia():
+    puro_v10 = {
+        "app": "mapa-ia-pppm",
+        "versao": "1.0",
+        "dados": {
+            "contexto": {"nome": "X"},
+            "diagnostico": {},
+            "mapa": {},
+            "casos_uso": [],
+            "governanca": {},
+        },
+    }
+    restaurado = import_export.importar(json.dumps(puro_v10))
+    assert restaurado["recomendacao_texto"] == ""

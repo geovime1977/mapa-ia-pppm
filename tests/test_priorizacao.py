@@ -95,3 +95,18 @@ def test_resumo_marca_bloqueado_sem_dono():
     r = priorizacao.resumo(c)
     assert r["pronto"] is False
     assert r["motivo_bloqueio"] != ""
+
+
+def test_interpretar_nota_1_traz_texto_do_json():
+    texto = priorizacao.interpretar_nota("impacto", 1)
+    assert "pequeno" in texto.lower()
+
+
+def test_interpretar_nota_2_retorna_intermediaria():
+    texto = priorizacao.interpretar_nota("impacto", 2)
+    assert "intermediária" in texto.lower()
+
+
+def test_interpretar_nota_5_traz_texto_do_json():
+    texto = priorizacao.interpretar_nota("valor", 5)
+    assert "mensurável" in texto.lower()

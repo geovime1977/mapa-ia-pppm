@@ -21,7 +21,7 @@ from reportlab.platypus import (
     TableStyle,
 )
 
-from src import data_loader, diagnostico, governanca, priorizacao
+from src import data_loader, diagnostico, governanca, priorizacao, recomendacao
 
 
 def _estilos() -> dict:
@@ -152,20 +152,60 @@ def _secao_governanca(story: list, casos: list, gov: dict, est: dict) -> None:
         story.append(Spacer(1, 0.15 * cm))
 
 
+def _secao_recomendacao(story: list, texto: str, estado: dict, est: dict) -> None:
+    """5. Recomendação executiva — texto editável do aluno ou sugestão on-the-fly."""
+    story.append(PageBreak())
+    story.append(Paragraph("5. Recomendação executiva", est["h1"]))
+    conteudo = (texto or "").strip()
+    if not conteudo:
+        conteudo = recomendacao.gerar_sugestao_recomendacao(
+            estado.get("casos_uso") or [],
+            estado.get("governanca") or {},
+            estado.get("contexto") or {},
+            _diag_para_recomendacao(estado.get("diagnostico") or {}),
+        )
+        story.append(Paragraph(
+            "<i>Texto sugerido automaticamente — o aluno pode editar na aba 6.</i>",
+            est["small"],
+        ))
+        story.append(Spacer(1, 0.15 * cm))
+    for paragrafo in conteudo.split("\n\n"):
+        p = paragrafo.strip()
+        if not p:
+            continue
+        story.append(Paragraph(p, est["corpo"]))
+        story.append(Spacer(1, 0.15 * cm))
+
+
+def _diag_para_recomendacao(diag: dict) -> dict | None:
+    """Empacota diagnóstico bruto no formato consumido por recomendacao."""
+    if not diag:
+        return None
+    total = diagnostico.total_maturidade(diag)
+    nivel = diagnostico.nivel_por_total(total)
+    gargalo = diagnostico.identificar_gargalo(diag)
+    return {
+        "total": total,
+        "nivel_numero": nivel["numero"],
+        "nivel_rotulo": nivel["rotulo"],
+        "gargalo": gargalo["rotulo"],
+    }
+
+
 def _secao_referencias(story: list, est: dict) -> None:
     """Apêndice pedagógico: 5 erros a evitar + 4 casos-exemplo da Empresa Alfa."""
     ex = data_loader.exemplos()
     story.append(PageBreak())
-    story.append(Paragraph("5. Referências pedagógicas (Aula 2)", est["h1"]))
+    story.append(Paragraph("6. Referências pedagógicas (Aula 2)", est["h1"]))
 
-    story.append(Paragraph("5.1 · Cinco erros a evitar", est["h2"]))
+    story.append(Paragraph("6.1 · Cinco erros a evitar", est["h2"]))
     for erro in ex["cinco_erros"]:
         story.append(Paragraph(f"<b>{erro['titulo']}</b> — {erro['descricao']}", est["corpo"]))
         story.append(Paragraph(f"↳ {erro['correcao']}", est["small"]))
         story.append(Spacer(1, 0.1 * cm))
 
     story.append(Spacer(1, 0.3 * cm))
-    story.append(Paragraph("5.2 · Casos-exemplo da Empresa Alfa", est["h2"]))
+    story.append(Paragraph("6.2 · Casos-exemplo da Empresa Alfa", est["h2"]))
     for alfa in ex["casos_alfa"]:
         story.append(Paragraph(f"<b>{alfa['rotulo']}</b>", est["corpo"]))
         story.append(Paragraph(
@@ -193,6 +233,7 @@ def gerar_pdf(estado: dict) -> bytes:
     _secao_mapa(story, estado.get("mapa") or {}, est)
     _secao_casos(story, estado.get("casos_uso") or [], est)
     _secao_governanca(story, estado.get("casos_uso") or [], estado.get("governanca") or {}, est)
+    _secao_recomendacao(story, estado.get("recomendacao_texto") or "", estado, est)
     _secao_referencias(story, est)
     doc.build(story)
     return buffer.getvalue()

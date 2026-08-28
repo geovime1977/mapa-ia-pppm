@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.telemetria import anonimizar
+from src.telemetria import _resumo_escalar, anonimizar
 
 
 def _estado_completo() -> dict:
@@ -98,3 +98,25 @@ def test_anonimizar_serializa_sem_pii():
     assert "Acme" not in dumped
     assert "Ciclana" not in dumped
     assert "Diretora" not in dumped
+
+
+def test_anonimizar_nao_vaza_recomendacao_texto():
+    import json
+    estado = _estado_completo()
+    estado["recomendacao_texto"] = "Texto confidencial com Acme SecretPhraseXYZ."
+    anon = anonimizar(estado)
+    assert "recomendacao_texto" not in anon
+    dumped = json.dumps(anon, ensure_ascii=False)
+    assert "SecretPhraseXYZ" not in dumped
+
+
+def test_resumo_escalar_marca_tem_recomendacao_editada():
+    estado_com = _estado_completo()
+    estado_com["recomendacao_texto"] = "Meu texto autoral"
+    resumo_com = _resumo_escalar(anonimizar(estado_com), estado_com)
+    assert resumo_com["tem_recomendacao_editada"] is True
+
+    estado_sem = _estado_completo()
+    estado_sem["recomendacao_texto"] = ""
+    resumo_sem = _resumo_escalar(anonimizar(estado_sem), estado_sem)
+    assert resumo_sem["tem_recomendacao_editada"] is False

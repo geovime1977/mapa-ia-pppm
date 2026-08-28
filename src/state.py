@@ -33,6 +33,7 @@ _SCHEMA = {
     "governanca": {},     # dict[caso_id, dict] — ver governanca.estado_zerado()
     "contexto_salvo": False,
     "mapa_salvo": False,
+    "recomendacao_texto": "",
 }
 
 
@@ -69,4 +70,5 @@ def get_all_data() -> dict:
         "mapa": dict(st.session_state.get("mapa") or {}),
         "casos_uso": list(st.session_state.get("casos_uso") or []),
         "governanca": dict(st.session_state.get("governanca") or {}),
+        "recomendacao_texto": str(st.session_state.get("recomendacao_texto") or ""),
     }

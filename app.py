@@ -41,6 +41,8 @@ def _aplicar_dados_importados(dados: dict) -> None:
             st.session_state[f"rast_{cid}_{rid}"] = v or ""
         st.session_state[f"aprov_{cid}"] = gov.get("aprovador", "")
         st.session_state[f"regdec_{cid}"] = bool(gov.get("decisao_registrada", False))
+    if "recomendacao_texto" in dados:
+        st.session_state["recomendacao_texto"] = dados["recomendacao_texto"] or ""
 
 
 def _listar_exemplos_prontos() -> list[dict]:
@@ -65,10 +67,12 @@ def _listar_exemplos_prontos() -> list[dict]:
 from src import (
     data_loader,
     diagnostico,
+    glossario,
     governanca,
     import_export,
     pdf as pdf_gen,
     priorizacao,
+    recomendacao,
     state,
     telemetria,
 )
@@ -226,6 +230,11 @@ with abas[3]:
     st.header("4. Casos de uso e priorização")
     st.caption("Aula 2 · slide 30 — nota 1-5 nos 5 critérios; corte obrigatório: sem dono, não vai.")
 
+    st.info(
+        "Sem evidência clara para atribuir nota alta, use nota 2 como padrão conservador. "
+        "Registre a evidência sempre que possível."
+    )
+
     exemplos = data_loader.exemplos()
 
     with st.expander("💡 5 erros a evitar antes de cadastrar seu caso (Aula 2 · slides 8-12)"):
@@ -325,11 +334,20 @@ with abas[3]:
                 cols = st.columns(5)
                 for j, crit in enumerate(data_loader.criterios()["criterios"]):
                     with cols[j]:
-                        caso["notas"][crit["id"]] = st.slider(
+                        tooltip = glossario.definicao_de(crit["id"]) or crit.get("descricao", "")
+                        nota_atual = st.slider(
                             crit["rotulo"], 1, 5,
                             int(caso["notas"].get(crit["id"], 3) or 3),
                             key=f"nota_{caso['id']}_{crit['id']}",
-                            help=crit["descricao"],
+                            help=tooltip,
+                        )
+                        caso["notas"][crit["id"]] = nota_atual
+                        escala = crit.get("escala") or {}
+                        st.caption(
+                            f"1: {escala.get('1', '-')} · 3: {escala.get('3', '-')} · 5: {escala.get('5', '-')}"
+                        )
+                        st.caption(
+                            f"Nota atual: {nota_atual} — {priorizacao.interpretar_nota(crit['id'], nota_atual)}"
                         )
 
                 r = priorizacao.resumo(caso)
@@ -374,7 +392,12 @@ with abas[3]:
 # ---------------------------------------------------------------------------- #
 with abas[4]:
     st.header("5. Governança e HITL")
-    st.caption(f"Princípio de ouro: {data_loader.governanca()['principio_de_ouro']}")
+    st.markdown(
+        glossario.aplicar_tooltips(
+            f"Princípio de ouro: {data_loader.governanca()['principio_de_ouro']}"
+        ),
+        unsafe_allow_html=True,
+    )
 
     if not st.session_state["casos_uso"]:
         st.info("Cadastre casos na aba 4 antes de configurar governança.")
@@ -430,6 +453,40 @@ with abas[4]:
 with abas[5]:
     st.header("6. Exportar Mapa Executivo (PDF)")
     st.caption("Gera o PDF consolidado com contexto, diagnóstico, mapa, casos ranqueados e governança.")
+
+    st.subheader("Recomendação executiva")
+    st.caption("Texto que abrirá o PDF. Comece pela sugestão automática e edite livremente.")
+    diag_atual = st.session_state.get("diagnostico") or {}
+    diag_para_reco = None
+    if diag_atual:
+        total_atual = diagnostico.total_maturidade(diag_atual)
+        nivel_atual = diagnostico.nivel_por_total(total_atual)
+        gargalo_atual = diagnostico.identificar_gargalo(diag_atual)
+        diag_para_reco = {
+            "total": total_atual,
+            "nivel_numero": nivel_atual["numero"],
+            "nivel_rotulo": nivel_atual["rotulo"],
+            "gargalo": gargalo_atual["rotulo"],
+        }
+    sugestao = recomendacao.gerar_sugestao_recomendacao(
+        st.session_state.get("casos_uso") or [],
+        st.session_state.get("governanca") or {},
+        st.session_state.get("contexto") or {},
+        diag_para_reco,
+    )
+    with st.expander("Ver sugestão automática", expanded=True):
+        st.markdown(glossario.aplicar_tooltips(sugestao), unsafe_allow_html=True)
+        if st.button("Usar esta sugestão como base", help="Substitui o texto atual pelo sugerido"):
+            st.session_state["recomendacao_texto"] = sugestao
+            st.rerun()
+    st.text_area(
+        "Recomendação (editável)",
+        key="recomendacao_texto",
+        height=260,
+        help="Este texto entra na abertura do PDF, antes das seções analíticas.",
+    )
+
+    st.divider()
 
     if st.button("📄 Gerar PDF", type="primary"):
         try:

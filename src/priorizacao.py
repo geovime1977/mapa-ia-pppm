@@ -78,6 +78,19 @@ def ranking(casos: list[dict]) -> list[dict]:
     return sorted(casos, key=_chave)
 
 
+def interpretar_nota(criterio_id: str, nota: int) -> str:
+    """Devolve a leitura textual da nota (1-5) para o critério.
+    Fallback quando ausente no JSON: rótulo genérico intermediário."""
+    for crit in data_loader.criterios()["criterios"]:
+        if crit["id"] == criterio_id:
+            interpretacoes = crit.get("interpretacoes") or {}
+            texto = interpretacoes.get(str(int(nota)))
+            if texto:
+                return texto
+            break
+    return "Posição intermediária entre nota inferior e superior."
+
+
 def resumo(caso: dict) -> dict:
     """Snapshot pronto para renderizar em tabela ou PDF."""
     s = score_caso(caso)

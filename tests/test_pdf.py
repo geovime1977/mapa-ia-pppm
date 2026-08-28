@@ -34,3 +34,27 @@ def test_gera_pdf_com_estado_completo():
     bytes_pdf = pdf.gerar_pdf(estado)
     assert bytes_pdf.startswith(b"%PDF-")
     assert len(bytes_pdf) > 2000
+
+
+def test_pdf_com_recomendacao_editada_inclui_texto():
+    marcador = "TextoAutoralComMarcadorSingularXYZ42"
+    estado = {
+        "contexto": {"nome": "X", "empresa": "Y", "porte": "PME"},
+        "diagnostico": {},
+        "mapa": {},
+        "casos_uso": [],
+        "governanca": {},
+        "recomendacao_texto": f"{marcador}\n\nSegundo parágrafo autoral do aluno.",
+    }
+    com_reco = pdf.gerar_pdf(estado)
+    assert com_reco.startswith(b"%PDF-")
+    try:
+        import io as _io
+
+        import pypdf
+        leitor = pypdf.PdfReader(_io.BytesIO(com_reco))
+        texto = "".join(pagina.extract_text() or "" for pagina in leitor.pages)
+        assert marcador in texto
+    except ImportError:
+        baseline = pdf.gerar_pdf({**estado, "recomendacao_texto": ""})
+        assert len(com_reco) != len(baseline)

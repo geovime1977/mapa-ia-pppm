@@ -10,6 +10,18 @@
         "Reduz dor relevante?",
         "Melhora indicadores do projeto?"
       ],
+      "escala": {
+        "1": "Impacto pequeno, local ou pouco relevante.",
+        "3": "Impacto relevante, mas restrito a uma área ou processo.",
+        "5": "Impacto elevado, estratégico e diretamente relacionado a resultados mensuráveis."
+      },
+      "interpretacoes": {
+        "1": "Impacto pequeno, local ou pouco relevante.",
+        "2": "Posição intermediária entre o nível 1 e o nível 3.",
+        "3": "Impacto relevante, mas restrito a uma área ou processo.",
+        "4": "Posição intermediária entre o nível 3 e o nível 5.",
+        "5": "Impacto elevado, estratégico e diretamente relacionado a resultados mensuráveis."
+      },
       "referencia": "Aula 2 · slide 24"
     },
     {
@@ -22,6 +34,18 @@
         "Pode começar pequeno?",
         "Depende de integração complexa?"
       ],
+      "escala": {
+        "1": "Tecnologia, equipe ou infraestrutura ainda não estão disponíveis.",
+        "3": "A implementação é possível, mas exige adaptações, testes ou recursos adicionais.",
+        "5": "A solução é tecnicamente viável com os recursos atuais e pode ser testada rapidamente."
+      },
+      "interpretacoes": {
+        "1": "Tecnologia, equipe ou infraestrutura ainda não estão disponíveis.",
+        "2": "Posição intermediária entre o nível 1 e o nível 3.",
+        "3": "A implementação é possível, mas exige adaptações, testes ou recursos adicionais.",
+        "4": "Posição intermediária entre o nível 3 e o nível 5.",
+        "5": "A solução é tecnicamente viável com os recursos atuais e pode ser testada rapidamente."
+      },
       "referencia": "Aula 2 · slide 25"
     },
     {
@@ -34,6 +58,18 @@
         "Há histórico relevante?",
         "Existe dono dos dados?"
       ],
+      "escala": {
+        "1": "Dados inexistentes, inacessíveis ou sem qualidade conhecida.",
+        "3": "Existem dados parciais, dispersos ou que precisam de tratamento.",
+        "5": "Dados suficientes, acessíveis, confiáveis e prontos para uso controlado."
+      },
+      "interpretacoes": {
+        "1": "Dados inexistentes, inacessíveis ou sem qualidade conhecida.",
+        "2": "Posição intermediária entre o nível 1 e o nível 3.",
+        "3": "Existem dados parciais, dispersos ou que precisam de tratamento.",
+        "4": "Posição intermediária entre o nível 3 e o nível 5.",
+        "5": "Dados suficientes, acessíveis, confiáveis e prontos para uso controlado."
+      },
       "referencia": "Aula 2 · slide 27"
     },
     {
@@ -46,6 +82,18 @@
         "Há dados sensíveis?",
         "O erro da IA seria crítico?"
       ],
+      "escala": {
+        "1": "Riscos elevados, sem responsável, controle de acesso ou plano de resposta.",
+        "3": "Riscos conhecidos, com controles parciais ou ainda em definição.",
+        "5": "Riscos controlados, responsáveis definidos, acessos adequados e plano de resposta estabelecido."
+      },
+      "interpretacoes": {
+        "1": "Riscos elevados, sem responsável, controle de acesso ou plano de resposta.",
+        "2": "Posição intermediária entre o nível 1 e o nível 3.",
+        "3": "Riscos conhecidos, com controles parciais ou ainda em definição.",
+        "4": "Posição intermediária entre o nível 3 e o nível 5.",
+        "5": "Riscos controlados, responsáveis definidos, acessos adequados e plano de resposta estabelecido."
+      },
       "referencia": "Aula 2 · slide 26"
     },
     {
@@ -58,6 +106,18 @@
         "Velocidade de decisão?",
         "Redução de risco ou retrabalho?"
       ],
+      "escala": {
+        "1": "Benefício incerto, difícil de medir ou pouco relevante.",
+        "3": "Benefício plausível, mas ainda depende de validação.",
+        "5": "Benefício claro, mensurável e alinhado a uma necessidade prioritária."
+      },
+      "interpretacoes": {
+        "1": "Benefício incerto, difícil de medir ou pouco relevante.",
+        "2": "Posição intermediária entre o nível 1 e o nível 3.",
+        "3": "Benefício plausível, mas ainda depende de validação.",
+        "4": "Posição intermediária entre o nível 3 e o nível 5.",
+        "5": "Benefício claro, mensurável e alinhado a uma necessidade prioritária."
+      },
       "referencia": "Aula 2 · slide 28"
     }
   ],

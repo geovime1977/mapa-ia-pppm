@@ -1,0 +1,105 @@
+{
+  "versao": "1.0",
+  "termos": {
+    "hitl": {
+      "termo_canonico": "HITL",
+      "definicao": "Human-in-the-Loop — humano valida, ajusta ou aprova a recomendação da IA antes que ela vire decisão executiva.",
+      "aliases": ["HITL", "human-in-the-loop", "humano no loop", "validação humana"]
+    },
+    "impacto": {
+      "termo_canonico": "Impacto",
+      "definicao": "Quanto o caso melhora resultado, prazo, custo, qualidade, risco ou satisfação do cliente. Peso 0.30 no score.",
+      "aliases": ["impacto no resultado", "impacto"]
+    },
+    "viabilidade": {
+      "termo_canonico": "Viabilidade",
+      "definicao": "Possibilidade real de implementar com tecnologia, orçamento, tempo, pessoas e processo disponíveis. Peso 0.20.",
+      "aliases": ["viabilidade técnica", "viabilidade"]
+    },
+    "dados_qualidade": {
+      "termo_canonico": "Dados disponíveis",
+      "definicao": "Existência, acesso, confiabilidade e suficiência dos dados necessários para apoiar a recomendação. Peso 0.20.",
+      "aliases": ["disponibilidade e qualidade dos dados", "dados disponíveis", "qualidade dos dados"]
+    },
+    "risco_controle": {
+      "termo_canonico": "Risco / segurança",
+      "definicao": "Riscos éticos, legais, operacionais, reputacionais e de segurança. Nota alta = risco baixo/bem controlado. Peso 0.15.",
+      "aliases": ["controle de risco e segurança", "risco / segurança", "risco e segurança"]
+    },
+    "valor": {
+      "termo_canonico": "Valor potencial",
+      "definicao": "Benefício executivo que pode ser demonstrado, medido e comunicado — ROI, economia, velocidade, redução de retrabalho. Peso 0.15.",
+      "aliases": ["valor potencial", "valor"]
+    },
+    "score_ponderado": {
+      "termo_canonico": "Score ponderado",
+      "definicao": "Média ponderada 1-5 das notas nos 5 critérios usando os pesos oficiais da Aula 2. Score final vai de 1.0 a 5.0.",
+      "aliases": ["score executivo", "score ponderado", "score final"]
+    },
+    "fazer_agora": {
+      "termo_canonico": "Fazer agora",
+      "definicao": "Faixa de score ≥ 4.0. Caso pronto para virar piloto imediato, desde que tenha dono humano declarado.",
+      "aliases": ["fazer agora"]
+    },
+    "preparar": {
+      "termo_canonico": "Preparar",
+      "definicao": "Faixa de score entre 3.0 e 3.99. Caso promissor que ainda precisa de dados, viabilidade ou governança amadurecida.",
+      "aliases": ["preparar"]
+    },
+    "nao_priorizar": {
+      "termo_canonico": "Não priorizar",
+      "definicao": "Faixa de score abaixo de 3.0. Caso que não sustenta prioridade agora — arquivar ou reformular.",
+      "aliases": ["não priorizar", "nao priorizar"]
+    },
+    "dados_sensiveis": {
+      "termo_canonico": "Dados sensíveis",
+      "definicao": "Informação que exige classificação e controle de acesso — pessoal, financeira, contratual ou estratégica.",
+      "aliases": ["dados sensíveis", "dados sensiveis"]
+    },
+    "governanca": {
+      "termo_canonico": "Governança",
+      "definicao": "Conjunto de regras, papéis e evidências que garantem uso seguro, ético e rastreável da IA — Aula 2 · slides 32-36.",
+      "aliases": ["governança", "governanca"]
+    },
+    "pppm": {
+      "termo_canonico": "PPPM",
+      "definicao": "Project, Program & Portfolio Management — gestão de projetos, programas e portfólio segundo o padrão PMBOK.",
+      "aliases": ["PPPM", "gestão de projetos programas e portfólio"]
+    },
+    "mapa_inicial": {
+      "termo_canonico": "Mapa Inicial",
+      "definicao": "Estrutura de 5 blocos (contexto, dor, dados, riscos, valor) usada na Aula 1 para enquadrar um caso concreto antes de priorizar.",
+      "aliases": ["mapa inicial", "mapa de 5 blocos", "mapa 5 blocos"]
+    },
+    "piloto": {
+      "termo_canonico": "Piloto",
+      "definicao": "Implementação inicial pequena, controlada e mensurável de um caso de IA antes de escalar para produção.",
+      "aliases": ["piloto", "prova de conceito", "POC"]
+    },
+    "corte_dono": {
+      "termo_canonico": "Corte obrigatório",
+      "definicao": "Regra da Aula 2 · slide 30: sem dono humano da decisão declarado, o caso NÃO está pronto independentemente do score.",
+      "aliases": ["corte obrigatório", "corte obrigatorio", "corte do dono"]
+    },
+    "pmbok_8": {
+      "termo_canonico": "PMBOK 8",
+      "definicao": "Oitava edição do Guia PMBOK — referência PMI para os 40 processos de gestão de projetos, base do curso PPPM.",
+      "aliases": ["PMBOK 8", "PMBOK 8ª edição", "PMBOK 8a edicao"]
+    },
+    "aula_1": {
+      "termo_canonico": "Aula 1",
+      "definicao": "Aula do Prof. Bezerra sobre diagnóstico de maturidade (5 dimensões, 0-6) e Mapa Inicial (5 blocos).",
+      "aliases": ["Aula 1"]
+    },
+    "aula_2": {
+      "termo_canonico": "Aula 2",
+      "definicao": "Aula do Prof. Bezerra sobre 5 erros, priorização com 5 critérios ponderados, corte obrigatório e governança HITL.",
+      "aliases": ["Aula 2"]
+    },
+    "contexto": {
+      "termo_canonico": "Contexto",
+      "definicao": "Bloco do Mapa Inicial que descreve organização, projeto ou processo em que o caso de IA será aplicado.",
+      "aliases": ["contexto"]
+    }
+  }
+}

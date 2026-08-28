@@ -160,6 +160,7 @@
         "aprovador": "",
         "decisao_registrada": false
       }
-    }
+    },
+    "recomendacao_texto": ""
   }
 }

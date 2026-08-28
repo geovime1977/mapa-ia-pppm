@@ -34,6 +34,7 @@ HEADERS = [
     "diag_gargalo",
     "n_casos",
     "n_casos_prontos",
+    "tem_recomendacao_editada",
     "payload_json",
 ]
 
@@ -75,7 +76,7 @@ def anonimizar(estado: dict) -> dict:
     }
 
 
-def _resumo_escalar(estado_anon: dict) -> dict:
+def _resumo_escalar(estado_anon: dict, estado_bruto: dict | None = None) -> dict:
     diag = estado_anon.get("diagnostico") or {}
     casos = estado_anon.get("casos_uso") or []
     total = diagnostico.total_maturidade(diag)
@@ -88,6 +89,7 @@ def _resumo_escalar(estado_anon: dict) -> dict:
         if ok:
             prontos += 1
     ctx = estado_anon.get("contexto") or {}
+    fonte_reco = estado_bruto if estado_bruto is not None else estado_anon
     return {
         "porte": ctx.get("porte", ""),
         "n_projetos": int(ctx.get("n_projetos", 0) or 0),
@@ -97,6 +99,7 @@ def _resumo_escalar(estado_anon: dict) -> dict:
         "diag_gargalo": gargalo["rotulo"],
         "n_casos": len(casos),
         "n_casos_prontos": prontos,
+        "tem_recomendacao_editada": bool(str(fonte_reco.get("recomendacao_texto") or "").strip()),
     }
 
 
@@ -130,7 +133,7 @@ def enviar(estado: dict, session_id: str, trigger: str) -> bool:
         if ws is None:
             return False
         anon = anonimizar(estado)
-        resumo = _resumo_escalar(anon)
+        resumo = _resumo_escalar(anon, estado)
         linha: list[Any] = [
             datetime.now().isoformat(timespec="seconds"),
             session_id,
@@ -143,6 +146,7 @@ def enviar(estado: dict, session_id: str, trigger: str) -> bool:
             resumo["diag_gargalo"],
             resumo["n_casos"],
             resumo["n_casos_prontos"],
+            resumo["tem_recomendacao_editada"],
             json.dumps(anon, ensure_ascii=False),
         ]
         ws.append_row(linha, value_input_option="USER_ENTERED")
