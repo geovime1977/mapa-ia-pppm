@@ -1,7 +1,7 @@
 # Manual do Consultor — mapa-ia-pppm
 
 Guia de uso completo do app https://mapa-ia-pppm.streamlit.app/ como ferramenta
-de consultoria. Baseado nas Aulas 1 e 2 do curso de IA em PPPM do Prof. Bezerra
+de consultoria. Baseado nas Aulas 1, 2 e 3 do curso de IA em PPPM do Prof. Bezerra
 (BSBr).
 
 Este manual responde às 6 perguntas mais comuns do consultor que começa a usar
@@ -376,8 +376,104 @@ corte obrigatório e mata a utilidade do exercício.
 | 3. Mapa Inicial | Aula 1 · slides 33, 35 | 5 blocos textuais | 10 min |
 | 4. Casos de Uso | Aula 2 · slides 8-30, 37 | Ranking priorizado | 15 min |
 | 5. Governança | Aula 2 · slides 32-36 | HITL + rastreabilidade | 10 min |
-| 6. Exportar PDF | (saída) | Mapa Executivo em PDF | 1 min |
-| **Total** | | | **~45 min** |
+| 6. Business Case | Aula 3 · slides 9-19 | ROI + payback + decisão por caso | 15 min |
+| 7. Prompts Executivos | Aula 3 · slides 20-23 | 4 prompts prontos p/ ChatGPT/Claude | consulta |
+| 8. Exportar PDF | (saída) | Mapa Executivo em PDF | 1 min |
+| **Total** | | | **~60 min** |
 
-45min é o tempo típico de uma sessão de discovery com cliente. O app foi
-desenhado para caber nessa janela.
+60min é o tempo típico de uma sessão de discovery + business case com cliente.
+Se você só faz discovery, pode fechar em 45min pulando as abas 6-7. Se o cliente
+já veio com dor mapeada, comece na aba 4 e feche em 30min.
+
+---
+
+## 8. Aba "Business Case" — a ponte da tese de valor até a decisão executiva
+
+Aula 3 · slides 9-19. Aqui o consultor traduz o caso de uso priorizado da aba 4
+em uma tese de valor com números, riscos e decisão. Um business case por caso —
+todos herdam automaticamente o dono e o corte da Aula 2.
+
+### O que vai em cada bloco
+
+| Bloco | O que preencher | Fonte |
+|---|---|---|
+| Contexto e dor | Dor mensurável, com número. "32% dos projetos atrasaram 20+ dias no último semestre, custo estimado R$ 480k." | Slide 9 |
+| Caso de uso | Como a IA atua (entrada → processamento → saída), sem cair no fascínio técnico | Slide 10 |
+| Dados | Quais dados a IA consome e como serão validados | Slide 10 |
+| Benefícios · Financeiro | Economia, receita adicional, custo evitado — em R$/ano | Slide 11 |
+| Benefícios · Operacional | Horas economizadas/mês × pessoas × custo/hora | Slide 17 |
+| Benefícios · Estratégico | Velocidade de decisão, stakeholders, governança (qualitativo) | Slide 19 |
+| Custos (5 camadas) | Tecnologia · Dados · Pessoas · Mudança · Governança — cada um com valor + premissa | Slide 12 |
+| Riscos | 4 riscos-padrão da aula, cada um em baixo/médio/alto + controle textual | Slide 13 |
+| ROI e cenários | Janela 6/12/24 meses × cenário pessimista (0.5) / base (1.0) / otimista (1.3) | Slides 14-15 |
+| Decisão solicitada | Aprovar piloto / Ajustar / Estudar mais / Descartar | Slide 7 |
+
+### Fórmula do ROI (mesma do slide 14)
+
+`ROI = (Benefícios líquidos − Investimento) ÷ Investimento × 100`
+
+- **Benefícios líquidos** = benefício financeiro anual + horas economizadas
+  monetizadas, ajustado pela janela de análise e pelo cenário escolhido
+- **Investimento** = soma das 5 camadas de custo
+- **Cenário base = 1.0**; pessimista corta o benefício pela metade (0.5);
+  otimista amplia em 30% (1.3)
+
+### Corte obrigatório novo da Aula 3
+
+A decisão **"Aprovar piloto"** só é liberada quando **3 condições** valem juntas:
+
+1. **Benefício líquido positivo** no cenário base (BL > 0)
+2. **Dono humano declarado** no caso (herdado da Aula 2)
+3. **Controle textual preenchido** em todo risco marcado como "alto"
+
+Se qualquer uma falha, o app deixa "Aprovar piloto" visível mas marcado como
+bloqueado — o consultor tem que escolher "Ajustar", "Estudar mais" ou
+"Descartar". Isso é intencional: força o business case a passar por um filtro
+antes de sair da sessão como recomendação de investimento.
+
+### Por que não tem método PO no cálculo
+
+Decisão explícita do dono do projeto: o app não usa Monte Carlo, MILP, AHP nem
+qualquer método de Pesquisa Operacional. Só a matemática direta do slide 14 do
+Prof. Bezerra. Se o consultor precisa de análise probabilística mais fina, ele
+sobe para o Motor PO da Eixo Estratégico — que é outra ferramenta, para outra
+etapa do funil.
+
+---
+
+## 9. Aba "Prompts Executivos" — os 4 prompts da Aula 3
+
+Aula 3 · slides 20-23. Quatro prompts prontos para o consultor colar no
+ChatGPT ou Claude durante a sessão, quando precisar acelerar diagnóstico,
+avaliar risco, priorizar ou fechar plano.
+
+| # | Prompt | Quando usar |
+|---|---|---|
+| 1 | **Diagnóstico executivo** | Antes de escrever o business case — transforma dados dispersos em diagnóstico estruturado |
+| 2 | **Riscos e governança** | Depois de propor a solução — pressiona o caso pela ótica de risco antes de assumir compromisso |
+| 3 | **Priorização e ROI** | Quando houver 2+ casos e for preciso comparar antes de recomendar por onde começar |
+| 4 | **Plano executivo** | Depois do business case preliminar — gera a peça de uma página que vai ao comitê |
+
+Cada prompt vem com **bloco copiável** (botão de copy do Streamlit) e indicação
+da entrada recomendada. Consultor não precisa decorar nem improvisar — bastam
+os 4 prompts nesta aba para cobrir o fluxo Aula 3 inteiro.
+
+---
+
+## 10. Como a Aula 3 muda o PDF final
+
+Antes da Aula 3, o PDF tinha 6 seções: contexto, diagnóstico, mapa, casos,
+governança, recomendação (+ apêndice pedagógico). Com a Aula 3, o PDF ganha
+uma seção nova antes da recomendação:
+
+**Seção 5 — Business Cases preliminares** — 1 subseção por caso com business
+case preenchido. Cada subseção traz:
+
+- Tabela com 8 blocos (contexto, caso de uso, dados, investimento, benefício
+  bruto/ano, cenário base com BL e ROI, payback, decisão solicitada)
+- Tabela cenários (pessimista/base/otimista) com BL, ROI% e payback
+- Se a decisão "Aprovar piloto" está marcada mas não passa nos cortes, o PDF
+  destaca as pendências abertas — o comitê vê a inconsistência
+
+Se nenhum caso tem business case preenchido, a seção 5 simplesmente não aparece
+no PDF — não polui a entrega quando o consultor rodou só as Aulas 1-2.

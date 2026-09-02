@@ -1,0 +1,166 @@
+{
+  "referencia_geral": "Aula 3 · Business Case, ROI e Ferramentas · Prof. Bezerra (BSBr)",
+  "pergunta_executiva": "Com base nisso, devemos investir, ajustar, testar ou abandonar?",
+  "principio": "O objetivo não é vender entusiasmo. É reduzir incerteza para a decisão.",
+  "oito_blocos": [
+    {"id": "contexto", "rotulo": "Contexto e dor", "pergunta": "Qual dor mensurável precisa ser resolvida?", "referencia": "Aula 3 · slide 9"},
+    {"id": "caso_uso", "rotulo": "Caso de uso", "pergunta": "Como a IA atuará no processo ou decisão?", "referencia": "Aula 3 · slide 10"},
+    {"id": "dados", "rotulo": "Dados necessários", "pergunta": "Quais dados a IA vai consumir e como serão validados?", "referencia": "Aula 3 · slide 10"},
+    {"id": "beneficios", "rotulo": "Benefícios esperados", "pergunta": "Quais ganhos financeiros, operacionais e estratégicos?", "referencia": "Aula 3 · slide 11"},
+    {"id": "custos", "rotulo": "Custos estimados", "pergunta": "Quais custos além da licença?", "referencia": "Aula 3 · slide 12"},
+    {"id": "riscos", "rotulo": "Riscos e controles", "pergunta": "O que pode dar errado e como controlar?", "referencia": "Aula 3 · slide 13"},
+    {"id": "roi_payback", "rotulo": "ROI / Payback", "pergunta": "Qual retorno esperado e em quanto tempo?", "referencia": "Aula 3 · slides 14-15"},
+    {"id": "decisao", "rotulo": "Decisão solicitada", "pergunta": "O que queremos aprovar agora?", "referencia": "Aula 3 · slide 7"}
+  ],
+  "camadas_beneficio": [
+    {
+      "id": "financeiro",
+      "rotulo": "Financeiro",
+      "descricao": "economia, receita adicional, margem, custo evitado, ROI",
+      "campos": [
+        {"id": "economia_anual", "rotulo": "Economia anual estimada (R$)", "tipo": "moeda"},
+        {"id": "receita_adicional_anual", "rotulo": "Receita adicional anual (R$)", "tipo": "moeda"},
+        {"id": "custo_evitado_anual", "rotulo": "Custo evitado anual (R$)", "tipo": "moeda"},
+        {"id": "premissa", "rotulo": "Premissa e fonte", "tipo": "texto"}
+      ],
+      "referencia": "Aula 3 · slide 11"
+    },
+    {
+      "id": "operacional",
+      "rotulo": "Operacional",
+      "descricao": "produtividade, velocidade, qualidade, retrabalho, SLA",
+      "campos": [
+        {"id": "horas_economizadas_mes", "rotulo": "Horas economizadas por mês", "tipo": "numero"},
+        {"id": "pessoas_impactadas", "rotulo": "Pessoas impactadas", "tipo": "numero"},
+        {"id": "custo_hora", "rotulo": "Custo por hora (R$)", "tipo": "moeda"},
+        {"id": "premissa", "rotulo": "Premissa e fonte", "tipo": "texto"}
+      ],
+      "referencia": "Aula 3 · slide 17"
+    },
+    {
+      "id": "estrategico",
+      "rotulo": "Estratégico",
+      "descricao": "decisão, risco, cliente, governança, vantagem competitiva",
+      "campos": [
+        {"id": "velocidade_decisao", "rotulo": "Ganho de velocidade de decisão", "tipo": "texto"},
+        {"id": "stakeholders", "rotulo": "Efeito em stakeholders", "tipo": "texto"},
+        {"id": "governanca", "rotulo": "Efeito em governança / rastreabilidade", "tipo": "texto"},
+        {"id": "aprendizado", "rotulo": "Aprendizado organizacional capturado", "tipo": "texto"}
+      ],
+      "referencia": "Aula 3 · slide 19"
+    }
+  ],
+  "camadas_custo": [
+    {"id": "tecnologia", "rotulo": "Tecnologia", "descricao": "licenças, API, infraestrutura, integração", "referencia": "Aula 3 · slide 12"},
+    {"id": "dados", "rotulo": "Dados", "descricao": "limpeza, acesso, qualidade, segurança", "referencia": "Aula 3 · slide 12"},
+    {"id": "pessoas", "rotulo": "Pessoas", "descricao": "treinamento, curadoria, tempo de especialistas", "referencia": "Aula 3 · slide 12"},
+    {"id": "mudanca", "rotulo": "Mudança", "descricao": "comunicação, adoção, suporte e ajustes", "referencia": "Aula 3 · slide 12"},
+    {"id": "governanca", "rotulo": "Governança", "descricao": "validação humana, auditoria, registro e controles", "referencia": "Aula 3 · slide 12"}
+  ],
+  "riscos_catalogo": [
+    {"id": "dados_sensiveis", "rotulo": "Dados sensíveis", "controle_padrao": "classificação, anonimização e acesso controlado", "referencia": "Aula 3 · slide 13"},
+    {"id": "decisao_indevida", "rotulo": "Decisão indevida (IA no lugar do humano)", "controle_padrao": "HITL, critérios de validação e escalonamento", "referencia": "Aula 3 · slide 13"},
+    {"id": "baixa_adocao", "rotulo": "Baixa adoção", "controle_padrao": "piloto, treinamento e comunicação com stakeholders", "referencia": "Aula 3 · slide 13"},
+    {"id": "vies_erro", "rotulo": "Viés ou erro do modelo", "controle_padrao": "teste, amostra, auditoria e revisão humana", "referencia": "Aula 3 · slide 13"}
+  ],
+  "painel_indicadores": [
+    {"id": "roi", "rotulo": "ROI", "mede": "Retorno financeiro", "exemplo": "150% em 12 meses"},
+    {"id": "payback", "rotulo": "Payback", "mede": "Tempo de recuperação", "exemplo": "4,8 meses"},
+    {"id": "produtividade", "rotulo": "Produtividade", "mede": "Tempo economizado", "exemplo": "-30% no ciclo"},
+    {"id": "qualidade", "rotulo": "Qualidade", "mede": "Erro / retrabalho", "exemplo": "-25% retrabalho"},
+    {"id": "risco", "rotulo": "Risco", "mede": "Exposição reduzida", "exemplo": "-40% incidentes"}
+  ],
+  "janelas_analise_meses": [6, 12, 24],
+  "cenarios_multiplicador": {
+    "pessimista": 0.5,
+    "base": 1.0,
+    "otimista": 1.3
+  },
+  "decisoes_possiveis": [
+    {"id": "aprovar_piloto", "rotulo": "Aprovar piloto", "descricao": "Autorizar execução do piloto com escopo, indicadores e HITL definidos.", "exige_bl_positivo": true},
+    {"id": "ajustar", "rotulo": "Ajustar escopo", "descricao": "Solicitar refinamento do caso antes de decidir (novos dados, novo recorte).", "exige_bl_positivo": false},
+    {"id": "estudar", "rotulo": "Estudar mais", "descricao": "Postergar decisão; buscar evidência adicional para reduzir incerteza.", "exige_bl_positivo": false},
+    {"id": "descartar", "rotulo": "Descartar", "descricao": "Recusar o caso — sem valor mensurável ou risco desproporcional.", "exige_bl_positivo": false}
+  ],
+  "cortes_bloqueio": {
+    "aprovar_exige_bl_positivo": "Decisão 'Aprovar piloto' só é liberada quando o benefício líquido no cenário base é maior que zero.",
+    "aprovar_exige_dono": "Corte herdado da Aula 2 (slide 30): sem dono humano declarado, o caso não é aprovável.",
+    "aprovar_exige_controle": "Todo risco marcado como alto exige controle textual preenchido."
+  },
+  "prompts_ferramenta": [
+    {
+      "id": "diagnostico_executivo",
+      "rotulo": "Prompt 1 — Diagnóstico executivo",
+      "quando_usar": "Antes de escrever o business case, para transformar dados dispersos em um diagnóstico estruturado.",
+      "entrada_recomendada": "Histórico de projetos, indicadores, entrevistas, atas, riscos e reclamações recorrentes.",
+      "texto": "Atue como consultor sênior em PPPM. Com base nas informações abaixo, identifique:\n1) problema central;\n2) causas prováveis;\n3) indicadores afetados;\n4) impacto financeiro ou operacional;\n5) hipótese de caso de uso de IA;\n6) dados necessários para validar a hipótese.\nResponda em formato executivo.",
+      "referencia": "Aula 3 · slide 20"
+    },
+    {
+      "id": "riscos_governanca",
+      "rotulo": "Prompt 2 — Riscos e governança",
+      "quando_usar": "Depois de propor a solução de IA, para pressionar o caso pela ótica de risco antes de assumir compromisso.",
+      "entrada_recomendada": "Descrição do caso de uso, dados envolvidos, decisões afetadas.",
+      "texto": "Avalie o caso de uso de IA descrito abaixo sob a ótica de riscos, ética, dados, segurança e governança. Classifique os riscos em baixo, médio e alto. Indique controles mínimos, ponto de intervenção humana, responsáveis, evidências de rastreabilidade e critérios para interromper o piloto.",
+      "referencia": "Aula 3 · slide 21"
+    },
+    {
+      "id": "priorizacao_roi",
+      "rotulo": "Prompt 3 — Priorização e ROI",
+      "quando_usar": "Quando houver mais de um caso e for preciso comparar antes de recomendar por onde começar.",
+      "entrada_recomendada": "Lista de casos de uso candidatos com dor, solução e dados disponíveis.",
+      "texto": "Compare os casos de uso abaixo usando os critérios: impacto, viabilidade, dados, risco e valor. Atribua notas de 1 a 5, explique cada nota, estime benefício, custo, ROI e payback quando houver dados suficientes. Ao final, recomende onde começar e quais premissas precisam ser validadas no piloto.",
+      "referencia": "Aula 3 · slide 22"
+    },
+    {
+      "id": "plano_executivo",
+      "rotulo": "Prompt 4 — Plano executivo",
+      "quando_usar": "Depois do business case preliminar, para gerar a peça de uma página que vai ao comitê.",
+      "entrada_recomendada": "Business case preliminar preenchido (problema, solução, benefícios, custos, riscos, ROI).",
+      "texto": "Com base neste business case preliminar, produza uma recomendação executiva de até uma página contendo: problema, solução de IA, benefícios esperados, investimento, ROI estimado, riscos, governança, cronograma do piloto, responsáveis, indicadores e decisão solicitada ao comitê.",
+      "referencia": "Aula 3 · slide 23"
+    }
+  ],
+  "estudos_simulados": [
+    {
+      "id": "erp_go_live",
+      "rotulo": "Business case: IA para reduzir risco no go-live de ERP",
+      "problema": "Histórico de atrasos e riscos críticos próximos ao go-live",
+      "solucao_ia": "Radar de riscos + previsão de atrasos + plano de contingência",
+      "beneficio": "Menos atraso, menor retrabalho e maior previsibilidade",
+      "risco": "Dados incompletos e falsa confiança na recomendação",
+      "controle": "HITL: GP e comitê validam replanejamento",
+      "decisao_solicitada": "Aprovar piloto de 4 semanas com indicadores de atraso, retrabalho e riscos mitigados.",
+      "referencia": "Aula 3 · slide 24"
+    },
+    {
+      "id": "portfolio",
+      "rotulo": "Business case: IA para priorização de portfólio",
+      "problema": "Projetos competem por orçamento e recursos sem critérios comparáveis",
+      "solucao_ia": "Rankear iniciativas, explicitar premissas e simular cenários",
+      "beneficio": "Melhor alocação de capital, menos projetos de baixo valor, maior foco estratégico",
+      "risco": "Falsa objetividade — modelo pode ser calibrado para justificar decisão política",
+      "controle": "Comitê revisa premissas antes do ranking valer para orçamento",
+      "decisao_solicitada": "Aprovar piloto na próxima janela de planejamento com valor esperado, capacidade e ROI por iniciativa.",
+      "referencia": "Aula 3 · slide 25"
+    },
+    {
+      "id": "comunicacao",
+      "rotulo": "Business case: IA para comunicação e engajamento",
+      "problema": "Stakeholders recebem informações diferentes, tardias ou desalinhadas",
+      "solucao_ia": "Resumos executivos, alertas, adaptação de linguagem e radar de engajamento",
+      "beneficio": "Decisões mais rápidas, maior adesão e menor retrabalho de comunicação",
+      "risco": "Tom inadequado, exposição de dados ou interpretação sem contexto",
+      "controle": "Sponsor e GP validam mensagens sensíveis antes do envio",
+      "decisao_solicitada": "Aprovar piloto restrito a 2 stakeholders com validação obrigatória antes do envio.",
+      "referencia": "Aula 3 · slide 26"
+    }
+  ],
+  "roteiro_5_minutos": [
+    {"tempo": "1 min", "conteudo": "Problema e impacto atual"},
+    {"tempo": "1 min", "conteudo": "Solução de IA e escopo do piloto"},
+    {"tempo": "1 min", "conteudo": "Benefícios, custos e ROI"},
+    {"tempo": "1 min", "conteudo": "Riscos, controles e HITL"},
+    {"tempo": "1 min", "conteudo": "Decisão solicitada e próximos passos"}
+  ]
+}

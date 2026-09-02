@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from typing import Any
 
-VERSAO = "1.3"
+VERSAO = "1.4"
 
 
 def exportar(estado: dict) -> str:
@@ -21,6 +21,7 @@ def exportar(estado: dict) -> str:
             "mapa": estado.get("mapa") or {},
             "casos_uso": estado.get("casos_uso") or [],
             "governanca": estado.get("governanca") or {},
+            "business_cases": estado.get("business_cases") or {},
             "recomendacao_texto": estado.get("recomendacao_texto") or "",
         },
     }
@@ -43,5 +44,6 @@ def importar(conteudo: str | bytes) -> dict:
         "mapa": dict(dados.get("mapa") or {}),
         "casos_uso": list(dados.get("casos_uso") or []),
         "governanca": dict(dados.get("governanca") or {}),
+        "business_cases": dict(dados.get("business_cases") or {}),
         "recomendacao_texto": str(dados.get("recomendacao_texto") or ""),
     }

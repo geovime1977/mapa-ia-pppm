@@ -31,6 +31,7 @@ _SCHEMA = {
     "mapa": None,         # idem
     "casos_uso": [],      # list[dict] — ver priorizacao.novo_caso()
     "governanca": {},     # dict[caso_id, dict] — ver governanca.estado_zerado()
+    "business_cases": {}, # dict[caso_id, dict] — ver business_case.estado_zerado() (Aula 3)
     "contexto_salvo": False,
     "mapa_salvo": False,
     "recomendacao_texto": "",
@@ -70,5 +71,6 @@ def get_all_data() -> dict:
         "mapa": dict(st.session_state.get("mapa") or {}),
         "casos_uso": list(st.session_state.get("casos_uso") or []),
         "governanca": dict(st.session_state.get("governanca") or {}),
+        "business_cases": dict(st.session_state.get("business_cases") or {}),
         "recomendacao_texto": str(st.session_state.get("recomendacao_texto") or ""),
     }

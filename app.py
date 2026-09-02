@@ -41,6 +41,23 @@ def _aplicar_dados_importados(dados: dict) -> None:
             st.session_state[f"rast_{cid}_{rid}"] = v or ""
         st.session_state[f"aprov_{cid}"] = gov.get("aprovador", "")
         st.session_state[f"regdec_{cid}"] = bool(gov.get("decisao_registrada", False))
+    for cid, bc in (dados.get("business_cases") or {}).items():
+        st.session_state[f"bc_contexto_{cid}"] = bc.get("contexto", "") or ""
+        st.session_state[f"bc_caso_uso_{cid}"] = bc.get("caso_uso", "") or ""
+        st.session_state[f"bc_dados_{cid}"] = bc.get("dados", "") or ""
+        st.session_state[f"bc_janela_{cid}"] = int(bc.get("janela_meses", 12) or 12)
+        st.session_state[f"bc_cenario_{cid}"] = bc.get("cenario", "base") or "base"
+        st.session_state[f"bc_decisao_{cid}"] = bc.get("decisao", "") or ""
+        st.session_state[f"bc_decisao_just_{cid}"] = bc.get("decisao_justificativa", "") or ""
+        for camada_id, campos in (bc.get("beneficios") or {}).items():
+            for campo_id, valor in campos.items():
+                st.session_state[f"bc_ben_{cid}_{camada_id}_{campo_id}"] = valor
+        for camada_id, dados_camada in (bc.get("custos") or {}).items():
+            st.session_state[f"bc_custo_val_{cid}_{camada_id}"] = float(dados_camada.get("valor", 0) or 0)
+            st.session_state[f"bc_custo_prem_{cid}_{camada_id}"] = dados_camada.get("premissa", "") or ""
+        for risco_id, r in (bc.get("riscos") or {}).items():
+            st.session_state[f"bc_risco_nivel_{cid}_{risco_id}"] = r.get("nivel", "baixo") or "baixo"
+            st.session_state[f"bc_risco_ctrl_{cid}_{risco_id}"] = r.get("controle", "") or ""
     if "recomendacao_texto" in dados:
         st.session_state["recomendacao_texto"] = dados["recomendacao_texto"] or ""
 
@@ -65,6 +82,7 @@ def _listar_exemplos_prontos() -> list[dict]:
     return resultado
 
 from src import (
+    business_case as business_case_mod,
     data_loader,
     diagnostico,
     glossario,
@@ -94,7 +112,7 @@ state.init_state()
 # =============================================================================
 with st.sidebar:
     st.title("🗺️ Mapa IA em PPPM")
-    st.caption("Aulas 1 e 2 · Prof. Bezerra (BSBr)")
+    st.caption("Aulas 1, 2 e 3 · Prof. Bezerra (BSBr)")
     st.divider()
 
     st.subheader("Portabilidade")
@@ -149,7 +167,9 @@ abas = st.tabs([
     "3. Mapa Inicial",
     "4. Casos de Uso",
     "5. Governança",
-    "6. Exportar PDF",
+    "6. Business Case",
+    "7. Prompts Executivos",
+    "8. Exportar PDF",
 ])
 
 
@@ -448,10 +468,224 @@ with abas[4]:
 
 
 # ---------------------------------------------------------------------------- #
-# 6. EXPORTAR PDF
+# 6. BUSINESS CASE (Aula 3)
 # ---------------------------------------------------------------------------- #
 with abas[5]:
-    st.header("6. Exportar Mapa Executivo (PDF)")
+    st.header("6. Business Case preliminar")
+    st.caption("Aula 3 · Prof. Bezerra — para cada caso da aba 4, monte a tese de valor que vai ao comitê.")
+
+    _bc_cfg = business_case_mod.config()
+    st.info(f"**Princípio:** {_bc_cfg['principio']}  \n**Pergunta executiva:** {_bc_cfg['pergunta_executiva']}")
+
+    with st.expander("💡 3 estudos simulados da Aula 3 (slides 24-26)"):
+        for est_bc in _bc_cfg["estudos_simulados"]:
+            st.markdown(f"**{est_bc['rotulo']}**")
+            st.markdown(
+                f"- Problema: {est_bc['problema']}\n"
+                f"- Solução IA: {est_bc['solucao_ia']}\n"
+                f"- Benefício: {est_bc['beneficio']}\n"
+                f"- Risco: {est_bc['risco']}  → **Controle:** {est_bc['controle']}\n"
+                f"- Decisão solicitada: {est_bc['decisao_solicitada']}"
+            )
+            st.divider()
+
+    if not st.session_state["casos_uso"]:
+        st.warning("Cadastre casos na aba 4 antes de montar o business case.")
+    else:
+        for caso in st.session_state["casos_uso"]:
+            cid = caso["id"]
+            bc = st.session_state["business_cases"].setdefault(cid, business_case_mod.estado_zerado(cid))
+            with st.expander(
+                f"{caso.get('rotulo') or '(sem rótulo)'} — id {cid}",
+                expanded=False,
+            ):
+                st.markdown("**Contexto e caso de uso**")
+                bc["contexto"] = st.text_area(
+                    "Contexto e dor (com métrica)",
+                    value=bc.get("contexto", ""),
+                    key=f"bc_contexto_{cid}",
+                    height=70,
+                    help='Bloco 1 · slide 9 — "32% dos projetos atrasaram mais de 20 dias no último semestre, gerando custo adicional estimado em R$ 480 mil."',
+                )
+                bc["caso_uso"] = st.text_area(
+                    "Como a IA atuará (entrada → processamento → saída)",
+                    value=bc.get("caso_uso", ""),
+                    key=f"bc_caso_uso_{cid}",
+                    height=70,
+                    help="Bloco 2 · slide 10 — descreva sem cair no fascínio técnico.",
+                )
+                bc["dados"] = st.text_area(
+                    "Dados necessários e como serão validados",
+                    value=bc.get("dados", ""),
+                    key=f"bc_dados_{cid}",
+                    height=60,
+                )
+
+                st.markdown("---")
+                st.markdown("**Benefícios (3 camadas · slide 11)**")
+                for camada in _bc_cfg["camadas_beneficio"]:
+                    st.markdown(f"*{camada['rotulo']}* — {camada['descricao']}")
+                    cols = st.columns(len(camada["campos"]))
+                    for i, campo in enumerate(camada["campos"]):
+                        atual = bc["beneficios"][camada["id"]].get(campo["id"], "" if campo["tipo"] == "texto" else 0.0)
+                        with cols[i]:
+                            if campo["tipo"] == "texto":
+                                bc["beneficios"][camada["id"]][campo["id"]] = st.text_input(
+                                    campo["rotulo"],
+                                    value=str(atual or ""),
+                                    key=f"bc_ben_{cid}_{camada['id']}_{campo['id']}",
+                                )
+                            else:
+                                bc["beneficios"][camada["id"]][campo["id"]] = st.number_input(
+                                    campo["rotulo"],
+                                    min_value=0.0,
+                                    value=float(atual or 0),
+                                    step=100.0 if campo["tipo"] == "moeda" else 1.0,
+                                    key=f"bc_ben_{cid}_{camada['id']}_{campo['id']}",
+                                )
+
+                st.markdown("---")
+                st.markdown("**Custos (5 camadas · slide 12) — custo real quase nunca é só licença**")
+                cols_c = st.columns(len(_bc_cfg["camadas_custo"]))
+                for i, camada in enumerate(_bc_cfg["camadas_custo"]):
+                    with cols_c[i]:
+                        bc["custos"][camada["id"]]["valor"] = st.number_input(
+                            f"{camada['rotulo']} (R$)",
+                            min_value=0.0,
+                            value=float(bc["custos"][camada["id"]].get("valor", 0) or 0),
+                            step=100.0,
+                            key=f"bc_custo_val_{cid}_{camada['id']}",
+                            help=camada["descricao"],
+                        )
+                        bc["custos"][camada["id"]]["premissa"] = st.text_input(
+                            "Premissa",
+                            value=bc["custos"][camada["id"]].get("premissa", ""),
+                            key=f"bc_custo_prem_{cid}_{camada['id']}",
+                            label_visibility="collapsed",
+                            placeholder="Premissa (opcional)",
+                        )
+
+                st.markdown("---")
+                st.markdown("**Riscos e controles (slide 13) — valor sem controle não escala**")
+                for r in _bc_cfg["riscos_catalogo"]:
+                    cols_r = st.columns([1, 3])
+                    with cols_r[0]:
+                        bc["riscos"][r["id"]]["nivel"] = st.selectbox(
+                            r["rotulo"],
+                            ["baixo", "medio", "alto"],
+                            index=["baixo", "medio", "alto"].index(bc["riscos"][r["id"]].get("nivel", "baixo")),
+                            key=f"bc_risco_nivel_{cid}_{r['id']}",
+                        )
+                    with cols_r[1]:
+                        bc["riscos"][r["id"]]["controle"] = st.text_input(
+                            "Controle",
+                            value=bc["riscos"][r["id"]].get("controle", ""),
+                            key=f"bc_risco_ctrl_{cid}_{r['id']}",
+                            placeholder=f"Padrão sugerido: {r['controle_padrao']}",
+                            label_visibility="collapsed",
+                        )
+
+                st.markdown("---")
+                st.markdown("**ROI e cenários (slides 14-15)**")
+                cols_j = st.columns(2)
+                with cols_j[0]:
+                    bc["janela_meses"] = st.selectbox(
+                        "Janela de análise (meses)",
+                        _bc_cfg["janelas_analise_meses"],
+                        index=_bc_cfg["janelas_analise_meses"].index(int(bc.get("janela_meses", 12))),
+                        key=f"bc_janela_{cid}",
+                    )
+                with cols_j[1]:
+                    bc["cenario"] = st.selectbox(
+                        "Cenário-alvo para a decisão",
+                        ["pessimista", "base", "otimista"],
+                        index=["pessimista", "base", "otimista"].index(bc.get("cenario", "base")),
+                        key=f"bc_cenario_{cid}",
+                    )
+
+                r = business_case_mod.resumo(bc, caso)
+                cA, cB, cC, cD = st.columns(4)
+                cA.metric("Investimento", f"R$ {r['investimento']:,.0f}".replace(",", "."))
+                cB.metric("Benefício bruto/ano", f"R$ {r['beneficio_bruto_anual']:,.0f}".replace(",", "."))
+                cC.metric(
+                    f"ROI base ({bc['janela_meses']}m)",
+                    f"{r['roi_base']}%" if r["roi_base"] is not None else "—",
+                )
+                cD.metric(
+                    "Payback",
+                    f"{r['payback_base']} meses" if r["payback_base"] is not None else "—",
+                )
+
+                st.markdown("**Cenários (pessimista / base / otimista)**")
+                cen_rows = []
+                for nome, info in r["cenarios"].items():
+                    cen_rows.append({
+                        "Cenário": nome,
+                        "Benefício líquido (R$)": info["beneficio_liquido"],
+                        "ROI %": info["roi_percentual"] if info["roi_percentual"] is not None else "—",
+                        "Payback (m)": info["payback_meses"] if info["payback_meses"] is not None else "—",
+                    })
+                st.dataframe(cen_rows, use_container_width=True, hide_index=True)
+
+                st.markdown("---")
+                st.markdown("**Decisão solicitada ao comitê**")
+                decisoes = business_case_mod.decisoes_disponiveis(bc, caso)
+                opcoes_ids = [""] + [d["id"] for d in decisoes]
+                def _label(did: str) -> str:
+                    if not did:
+                        return "— selecionar —"
+                    for d in decisoes:
+                        if d["id"] == did:
+                            marca = "" if d["disponivel"] else "  ⛔ bloqueada"
+                            return f"{d['rotulo']}{marca}"
+                    return did
+                idx_atual = opcoes_ids.index(bc.get("decisao", "")) if bc.get("decisao", "") in opcoes_ids else 0
+                bc["decisao"] = st.selectbox(
+                    "Decisão",
+                    opcoes_ids,
+                    index=idx_atual,
+                    format_func=_label,
+                    key=f"bc_decisao_{cid}",
+                )
+                bc["decisao_justificativa"] = st.text_area(
+                    "Justificativa curta da decisão (vai para o PDF)",
+                    value=bc.get("decisao_justificativa", ""),
+                    key=f"bc_decisao_just_{cid}",
+                    height=60,
+                )
+
+                ok_aprovar, pendencias = business_case_mod.pode_aprovar(bc, caso)
+                if bc["decisao"] == "aprovar_piloto" and not ok_aprovar:
+                    st.error(
+                        "Decisão 'Aprovar piloto' não pode ser registrada. Pendências:\n\n- "
+                        + "\n- ".join(pendencias)
+                    )
+                elif bc["decisao"] and bc["decisao"] != "aprovar_piloto":
+                    d_desc = next((d["descricao"] for d in decisoes if d["id"] == bc["decisao"]), "")
+                    st.info(f"Decisão registrada: {d_desc}")
+                elif ok_aprovar:
+                    st.success("Business case passa nos 3 cortes — 'Aprovar piloto' está liberado.")
+
+
+# ---------------------------------------------------------------------------- #
+# 7. PROMPTS EXECUTIVOS (Aula 3)
+# ---------------------------------------------------------------------------- #
+with abas[6]:
+    st.header("7. Prompts executivos")
+    st.caption("Aula 3 · slides 20-23 — 4 prompts prontos para usar no ChatGPT/Claude durante a consultoria.")
+
+    _bc_cfg_p = business_case_mod.config()
+    for prompt in _bc_cfg_p["prompts_ferramenta"]:
+        with st.expander(f"**{prompt['rotulo']}** — {prompt['quando_usar']}", expanded=False):
+            st.caption(f"*Entrada recomendada:* {prompt['entrada_recomendada']}  \n*Referência:* {prompt['referencia']}")
+            st.code(prompt["texto"], language="text")
+
+
+# ---------------------------------------------------------------------------- #
+# 8. EXPORTAR PDF
+# ---------------------------------------------------------------------------- #
+with abas[7]:
+    st.header("8. Exportar Mapa Executivo (PDF)")
     st.caption("Gera o PDF consolidado com contexto, diagnóstico, mapa, casos ranqueados e governança.")
 
     st.subheader("Recomendação executiva")

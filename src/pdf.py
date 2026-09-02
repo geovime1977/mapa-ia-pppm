@@ -21,6 +21,7 @@ from reportlab.platypus import (
     TableStyle,
 )
 
+from src import business_case as business_case_mod
 from src import data_loader, diagnostico, governanca, priorizacao, recomendacao
 
 
@@ -152,10 +153,95 @@ def _secao_governanca(story: list, casos: list, gov: dict, est: dict) -> None:
         story.append(Spacer(1, 0.15 * cm))
 
 
-def _secao_recomendacao(story: list, texto: str, estado: dict, est: dict) -> None:
-    """5. Recomendação executiva — texto editável do aluno ou sugestão on-the-fly."""
+def _fmt_moeda(v: float) -> str:
+    try:
+        return f"R$ {float(v):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    except (TypeError, ValueError):
+        return "R$ 0,00"
+
+
+def _secao_business_cases(story: list, casos: list, bcs: dict, est: dict) -> None:
+    """5. Business Cases preliminares — 1 subseção por caso com BC preenchido (Aula 3)."""
+    cfg = business_case_mod.config()
+    casos_com_bc = [c for c in casos if bcs.get(c["id"])]
+    if not casos_com_bc:
+        return
     story.append(PageBreak())
-    story.append(Paragraph("5. Recomendação executiva", est["h1"]))
+    story.append(Paragraph("5. Business Cases preliminares (Aula 3)", est["h1"]))
+    story.append(Paragraph(f"<i>{cfg['principio']}</i>", est["corpo"]))
+    story.append(Spacer(1, 0.2 * cm))
+
+    for c in casos_com_bc:
+        bc = bcs[c["id"]]
+        r = business_case_mod.resumo(bc, c)
+        story.append(Paragraph(f"<b>{r['rotulo']}</b>", est["h2"]))
+
+        linhas = [
+            ["Contexto e dor", (bc.get("contexto") or "—")[:400]],
+            ["Caso de uso de IA", (bc.get("caso_uso") or "—")[:400]],
+            ["Dados necessários", (bc.get("dados") or "—")[:400]],
+            ["Investimento total", _fmt_moeda(r["investimento"])],
+            ["Benefício bruto anual", _fmt_moeda(r["beneficio_bruto_anual"])],
+            [
+                f"Cenário base ({bc.get('janela_meses', 12)} meses)",
+                f"BL: {_fmt_moeda(r['beneficio_liquido_base'])} · "
+                f"ROI: {r['roi_base']}%" if r['roi_base'] is not None else f"BL: {_fmt_moeda(r['beneficio_liquido_base'])} · ROI: —",
+            ],
+            [
+                "Payback (cenário base)",
+                f"{r['payback_base']} meses" if r["payback_base"] is not None else "—",
+            ],
+            ["Decisão solicitada", r["decisao_rotulo"] or "— (não preenchida)"],
+        ]
+        tabela = Table(linhas, colWidths=[4.5 * cm, 12.0 * cm])
+        tabela.setStyle(TableStyle([
+            ("GRID", (0, 0), (-1, -1), 0.3, colors.grey),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ("BACKGROUND", (0, 0), (0, -1), colors.HexColor("#e5e7eb")),
+            ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+            ("FONTSIZE", (0, 0), (-1, -1), 8),
+            ("LEFTPADDING", (0, 0), (-1, -1), 4),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+        ]))
+        story.append(tabela)
+        story.append(Spacer(1, 0.15 * cm))
+
+        cenarios = r["cenarios"]
+        story.append(Paragraph("<b>Cenários (pessimista / base / otimista):</b>", est["corpo"]))
+        cen_linhas = [["Cenário", "Benefício líquido", "ROI %", "Payback"]]
+        for nome in ("pessimista", "base", "otimista"):
+            info = cenarios.get(nome, {})
+            cen_linhas.append([
+                nome.capitalize(),
+                _fmt_moeda(info.get("beneficio_liquido") or 0),
+                f"{info['roi_percentual']}%" if info.get("roi_percentual") is not None else "—",
+                f"{info['payback_meses']} m" if info.get("payback_meses") is not None else "—",
+            ])
+        cen_tab = Table(cen_linhas, colWidths=[3.5 * cm, 5.0 * cm, 3.5 * cm, 4.5 * cm])
+        cen_tab.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1e3a8a")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("GRID", (0, 0), (-1, -1), 0.3, colors.grey),
+            ("FONTSIZE", (0, 0), (-1, -1), 8),
+            ("ALIGN", (1, 0), (-1, -1), "RIGHT"),
+        ]))
+        story.append(cen_tab)
+
+        if not r["pode_aprovar"] and r["decisao"] == "aprovar_piloto":
+            story.append(Spacer(1, 0.1 * cm))
+            story.append(Paragraph(
+                "<b>Atenção:</b> decisão 'Aprovar piloto' marcada mas não passa nos cortes: "
+                + " · ".join(r["pendencias_aprovacao"]),
+                est["corpo"],
+            ))
+        story.append(Spacer(1, 0.3 * cm))
+
+
+def _secao_recomendacao(story: list, texto: str, estado: dict, est: dict) -> None:
+    """6. Recomendação executiva — texto editável do aluno ou sugestão on-the-fly."""
+    story.append(PageBreak())
+    story.append(Paragraph("6. Recomendação executiva", est["h1"]))
     conteudo = (texto or "").strip()
     if not conteudo:
         conteudo = recomendacao.gerar_sugestao_recomendacao(
@@ -196,7 +282,7 @@ def _secao_referencias(story: list, est: dict) -> None:
     """Apêndice pedagógico: 5 erros a evitar + 4 casos-exemplo da Empresa Alfa."""
     ex = data_loader.exemplos()
     story.append(PageBreak())
-    story.append(Paragraph("6. Referências pedagógicas (Aula 2)", est["h1"]))
+    story.append(Paragraph("7. Referências pedagógicas (Aula 2)", est["h1"]))
 
     story.append(Paragraph("6.1 · Cinco erros a evitar", est["h2"]))
     for erro in ex["cinco_erros"]:
@@ -233,6 +319,7 @@ def gerar_pdf(estado: dict) -> bytes:
     _secao_mapa(story, estado.get("mapa") or {}, est)
     _secao_casos(story, estado.get("casos_uso") or [], est)
     _secao_governanca(story, estado.get("casos_uso") or [], estado.get("governanca") or {}, est)
+    _secao_business_cases(story, estado.get("casos_uso") or [], estado.get("business_cases") or {}, est)
     _secao_recomendacao(story, estado.get("recomendacao_texto") or "", estado, est)
     _secao_referencias(story, est)
     doc.build(story)
