@@ -41,13 +41,18 @@ def _aplicar_dados_importados(dados: dict) -> None:
             st.session_state[f"rast_{cid}_{rid}"] = v or ""
         st.session_state[f"aprov_{cid}"] = gov.get("aprovador", "")
         st.session_state[f"regdec_{cid}"] = bool(gov.get("decisao_registrada", False))
+    _CEN_LEGADO = {"pessimista": "conservador", "base": "provavel"}
+    _DEC_LEGADO = {"descartar": "nao_recomendar_agora"}
     for cid, bc in (dados.get("business_cases") or {}).items():
+        st.session_state[f"bc_linha_de_base_{cid}"] = bc.get("linha_de_base", "") or ""
         st.session_state[f"bc_contexto_{cid}"] = bc.get("contexto", "") or ""
         st.session_state[f"bc_caso_uso_{cid}"] = bc.get("caso_uso", "") or ""
         st.session_state[f"bc_dados_{cid}"] = bc.get("dados", "") or ""
         st.session_state[f"bc_janela_{cid}"] = int(bc.get("janela_meses", 12) or 12)
-        st.session_state[f"bc_cenario_{cid}"] = bc.get("cenario", "base") or "base"
-        st.session_state[f"bc_decisao_{cid}"] = bc.get("decisao", "") or ""
+        _cen = bc.get("cenario", "provavel") or "provavel"
+        st.session_state[f"bc_cenario_{cid}"] = _CEN_LEGADO.get(_cen, _cen)
+        _dec = bc.get("decisao", "") or ""
+        st.session_state[f"bc_decisao_{cid}"] = _DEC_LEGADO.get(_dec, _dec)
         st.session_state[f"bc_decisao_just_{cid}"] = bc.get("decisao_justificativa", "") or ""
         for camada_id, campos in (bc.get("beneficios") or {}).items():
             for campo_id, valor in campos.items():
@@ -168,8 +173,7 @@ abas = st.tabs([
     "4. Casos de Uso",
     "5. Governança",
     "6. Business Case",
-    "7. Prompts Executivos",
-    "8. Exportar PDF",
+    "7. Exportar PDF",
 ])
 
 
@@ -499,13 +503,20 @@ with abas[5]:
                 f"{caso.get('rotulo') or '(sem rótulo)'} — id {cid}",
                 expanded=False,
             ):
-                st.markdown("**Contexto e caso de uso**")
+                st.markdown("**Problema, linha de base e caso de uso**")
                 bc["contexto"] = st.text_area(
-                    "Contexto e dor (com métrica)",
+                    "Problema descrito pelo aluno (o que dói hoje)",
                     value=bc.get("contexto", ""),
                     key=f"bc_contexto_{cid}",
                     height=70,
-                    help='Bloco 1 · slide 9 — "32% dos projetos atrasaram mais de 20 dias no último semestre, gerando custo adicional estimado em R$ 480 mil."',
+                    help='Bloco 1 · slide 9 — Ex: "Aprovação de crédito depende de análise manual e trava vendas".',
+                )
+                bc["linha_de_base"] = st.text_area(
+                    "Linha de base — valor atual do KPI (número, prazo, custo ou frequência hoje)",
+                    value=bc.get("linha_de_base", ""),
+                    key=f"bc_linha_de_base_{cid}",
+                    height=60,
+                    help='Ex: "SLA médio 4,2 dias · 480 análises/mês · custo R$ 62/análise". Serve de referência para estimar o benefício.',
                 )
                 bc["caso_uso"] = st.text_area(
                     "Como a IA atuará (entrada → processamento → saída)",
@@ -543,6 +554,16 @@ with abas[5]:
                                     step=100.0 if campo["tipo"] == "moeda" else 1.0,
                                     key=f"bc_ben_{cid}_{camada['id']}_{campo['id']}",
                                 )
+                # Auto-derivação: se perda_atual × %reducao > 0, sobrescreve economia_anual
+                _econ = business_case_mod.derivar_economia_anual(bc)
+                _fin = bc["beneficios"]["financeiro"]
+                if float(_fin.get("perda_atual_anual") or 0) > 0 and float(_fin.get("percentual_reducao") or 0) > 0:
+                    st.caption(
+                        f"Economia anual recalculada automaticamente: "
+                        f"R$ {_econ:,.0f}".replace(",", ".")
+                        + f"  (= R$ {float(_fin['perda_atual_anual']):,.0f}".replace(",", ".")
+                        + f" × {float(_fin['percentual_reducao']):.1f}%)"
+                    )
 
                 st.markdown("---")
                 st.markdown("**Custos (5 camadas · slide 12) — custo real quase nunca é só licença**")
@@ -596,10 +617,18 @@ with abas[5]:
                         key=f"bc_janela_{cid}",
                     )
                 with cols_j[1]:
+                    _CEN_OPCOES = ["conservador", "provavel", "otimista"]
+                    _CEN_LABELS = _bc_cfg.get("cenarios_rotulo", {
+                        "conservador": "Conservador", "provavel": "Provável", "otimista": "Otimista",
+                    })
+                    _cen_atual = bc.get("cenario", "provavel")
+                    if _cen_atual not in _CEN_OPCOES:
+                        _cen_atual = "provavel"
                     bc["cenario"] = st.selectbox(
                         "Cenário-alvo para a decisão",
-                        ["pessimista", "base", "otimista"],
-                        index=["pessimista", "base", "otimista"].index(bc.get("cenario", "base")),
+                        _CEN_OPCOES,
+                        index=_CEN_OPCOES.index(_cen_atual),
+                        format_func=lambda k: _CEN_LABELS.get(k, k.capitalize()),
                         key=f"bc_cenario_{cid}",
                     )
 
@@ -608,7 +637,7 @@ with abas[5]:
                 cA.metric("Investimento", f"R$ {r['investimento']:,.0f}".replace(",", "."))
                 cB.metric("Benefício bruto/ano", f"R$ {r['beneficio_bruto_anual']:,.0f}".replace(",", "."))
                 cC.metric(
-                    f"ROI base ({bc['janela_meses']}m)",
+                    f"ROI provável ({bc['janela_meses']}m)",
                     f"{r['roi_base']}%" if r["roi_base"] is not None else "—",
                 )
                 cD.metric(
@@ -616,11 +645,12 @@ with abas[5]:
                     f"{r['payback_base']} meses" if r["payback_base"] is not None else "—",
                 )
 
-                st.markdown("**Cenários (pessimista / base / otimista)**")
+                st.markdown("**Cenários (conservador / provável / otimista)**")
                 cen_rows = []
+                _labels = _bc_cfg.get("cenarios_rotulo", {})
                 for nome, info in r["cenarios"].items():
                     cen_rows.append({
-                        "Cenário": nome,
+                        "Cenário": _labels.get(nome, nome.capitalize()),
                         "Benefício líquido (R$)": info["beneficio_liquido"],
                         "ROI %": info["roi_percentual"] if info["roi_percentual"] is not None else "—",
                         "Payback (m)": info["payback_meses"] if info["payback_meses"] is not None else "—",
@@ -668,24 +698,15 @@ with abas[5]:
 
 
 # ---------------------------------------------------------------------------- #
-# 7. PROMPTS EXECUTIVOS (Aula 3)
+# 7. EXPORTAR PDF
 # ---------------------------------------------------------------------------- #
 with abas[6]:
-    st.header("7. Prompts executivos")
-    st.caption("Aula 3 · slides 20-23 — 4 prompts prontos para usar no ChatGPT/Claude durante a consultoria.")
-
-    _bc_cfg_p = business_case_mod.config()
-    for prompt in _bc_cfg_p["prompts_ferramenta"]:
-        with st.expander(f"**{prompt['rotulo']}** — {prompt['quando_usar']}", expanded=False):
-            st.caption(f"*Entrada recomendada:* {prompt['entrada_recomendada']}  \n*Referência:* {prompt['referencia']}")
-            st.code(prompt["texto"], language="text")
-
-
-# ---------------------------------------------------------------------------- #
-# 8. EXPORTAR PDF
-# ---------------------------------------------------------------------------- #
-with abas[7]:
-    st.header("8. Exportar Mapa Executivo (PDF)")
+    st.header("7. Exportar Mapa Executivo (PDF)")
+    st.info(
+        "Prompts executivos (Aula 3 · Ferramentas 1-4) foram movidos para o "
+        "**Anexo do Consultor** — `docs/ANEXO-CONSULTOR.md`. "
+        "Uso interno; não acompanha o PDF do cliente."
+    )
     st.caption("Gera o PDF consolidado com contexto, diagnóstico, mapa, casos ranqueados e governança.")
 
     st.subheader("Recomendação executiva")

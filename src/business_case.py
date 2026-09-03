@@ -51,6 +51,7 @@ def estado_zerado(caso_id: str) -> dict[str, Any]:
         riscos[r["id"]] = {"nivel": "baixo", "controle": ""}
     return {
         "caso_id": caso_id,
+        "linha_de_base": "",
         "contexto": "",
         "caso_uso": "",
         "dados": "",
@@ -58,10 +59,21 @@ def estado_zerado(caso_id: str) -> dict[str, Any]:
         "custos": custos,
         "riscos": riscos,
         "janela_meses": 12,
-        "cenario": "base",
+        "cenario": "provavel",
         "decisao": "",
         "decisao_justificativa": "",
     }
+
+
+def derivar_economia_anual(bc: dict) -> float:
+    """Auto-calcula economia_anual = perda_atual × %reducao/100 quando ambos > 0.
+    Se algum for 0, mantém o valor manual. Chamar após todo edit de campo financeiro."""
+    fin = bc.setdefault("beneficios", {}).setdefault("financeiro", {})
+    perda = _num(fin.get("perda_atual_anual"))
+    pct = _num(fin.get("percentual_reducao"))
+    if perda > 0 and pct > 0:
+        fin["economia_anual"] = round(perda * pct / 100.0, 2)
+    return float(fin.get("economia_anual") or 0)
 
 
 # ---------------------------------------------------------------------------- #
@@ -97,7 +109,7 @@ def beneficio_ajustado(bc: dict, janela_meses: int | None = None, cenario: str |
     """Benefício bruto anualizado × (janela/12) × multiplicador do cenário."""
     cfg = config()
     janela = int(janela_meses if janela_meses is not None else bc.get("janela_meses", 12))
-    cen = str(cenario if cenario is not None else bc.get("cenario", "base"))
+    cen = str(cenario if cenario is not None else bc.get("cenario", "provavel"))
     mult = float(cfg["cenarios_multiplicador"].get(cen, 1.0))
     bruto_anual = beneficio_anual_bruto(bc)
     return round(bruto_anual * (janela / 12.0) * mult, 2)
@@ -119,7 +131,7 @@ def roi_percentual(bc: dict, janela_meses: int | None = None, cenario: str | Non
 def payback_meses(bc: dict, cenario: str | None = None) -> float | None:
     """Payback = investimento ÷ benefício mensal ajustado. None se benefício mensal <= 0."""
     cfg = config()
-    cen = str(cenario if cenario is not None else bc.get("cenario", "base"))
+    cen = str(cenario if cenario is not None else bc.get("cenario", "provavel"))
     mult = float(cfg["cenarios_multiplicador"].get(cen, 1.0))
     bruto_mensal = (beneficio_anual_bruto(bc) / 12.0) * mult
     inv = investimento_total(bc)
@@ -129,7 +141,7 @@ def payback_meses(bc: dict, cenario: str | None = None) -> float | None:
 
 
 def cenarios_completos(bc: dict) -> dict[str, dict]:
-    """Devolve o trio pessimista/base/otimista com BL e ROI por cenário."""
+    """Devolve o trio conservador/provavel/otimista com BL e ROI por cenário."""
     cfg = config()
     out: dict[str, dict] = {}
     janela = int(bc.get("janela_meses", 12))
@@ -166,7 +178,7 @@ def riscos_altos_sem_controle(bc: dict) -> list[str]:
 def pode_aprovar(bc: dict, caso: dict) -> tuple[bool, list[str]]:
     """Checa os 3 cortes para 'Aprovar piloto'. Devolve (ok, pendências)."""
     pendencias: list[str] = []
-    if beneficio_liquido(bc, cenario="base") <= 0:
+    if beneficio_liquido(bc, cenario="provavel") <= 0:
         pendencias.append(config()["cortes_bloqueio"]["aprovar_exige_bl_positivo"])
     ok_dono, motivo = priorizacao.pronto_para_executar(caso)
     if not ok_dono:
@@ -205,9 +217,9 @@ def resumo(bc: dict, caso: dict) -> dict:
         "rotulo": caso.get("rotulo") or "(sem rótulo)",
         "beneficio_bruto_anual": beneficio_anual_bruto(bc),
         "investimento": investimento_total(bc),
-        "beneficio_liquido_base": beneficio_liquido(bc, cenario="base"),
-        "roi_base": roi_percentual(bc, cenario="base"),
-        "payback_base": payback_meses(bc, cenario="base"),
+        "beneficio_liquido_base": beneficio_liquido(bc, cenario="provavel"),
+        "roi_base": roi_percentual(bc, cenario="provavel"),
+        "payback_base": payback_meses(bc, cenario="provavel"),
         "cenarios": cenarios_completos(bc),
         "decisao": bc.get("decisao") or "",
         "decisao_rotulo": (_decisao_por_id(bc.get("decisao") or "") or {}).get("rotulo", ""),

@@ -22,7 +22,7 @@ def _bc_com_valores(caso):
     bc["custos"]["tecnologia"]["valor"] = 30_000.0
     bc["custos"]["mudanca"]["valor"] = 30_000.0
     bc["janela_meses"] = 12
-    bc["cenario"] = "base"
+    bc["cenario"] = "provavel"
     return bc
 
 
@@ -35,15 +35,19 @@ def test_estado_zerado_tem_estrutura_esperada():
     assert set(bc["beneficios"].keys()) == {"financeiro", "operacional", "estrategico"}
     assert set(bc["custos"].keys()) == {"tecnologia", "dados", "pessoas", "mudanca", "governanca"}
     assert bc["janela_meses"] == 12
-    assert bc["cenario"] == "base"
+    assert bc["cenario"] == "provavel"
     assert bc["decisao"] == ""
+    assert bc["linha_de_base"] == ""
 
 
 def test_config_carrega_json():
     cfg = bc_mod.config()
-    assert cfg["cenarios_multiplicador"]["base"] == 1.0
-    assert len(cfg["prompts_ferramenta"]) == 4
+    assert cfg["cenarios_multiplicador"]["provavel"] == 1.0
+    assert cfg["cenarios_multiplicador"]["conservador"] == 0.5
     assert len(cfg["estudos_simulados"]) == 3
+    assert "prompts_ferramenta" not in cfg
+    assert any(d["id"] == "nao_recomendar_agora" for d in cfg["decisoes_possiveis"])
+    assert not any(d["id"] == "descartar" for d in cfg["decisoes_possiveis"])
 
 
 # ---------------------------------------------------------------------------- #
@@ -79,18 +83,18 @@ def test_exemplo_calculado_aula3_slide15():
     assert bc_mod.payback_meses(bc) == pytest.approx(4.8, abs=0.1)
 
 
-def test_cenarios_pessimista_reduz_beneficio_pela_metade():
+def test_cenarios_conservador_reduz_beneficio_pela_metade():
     caso = _caso_com_dono()
     bc = _bc_com_valores(caso)
-    ben_base = bc_mod.beneficio_ajustado(bc, cenario="base")
-    ben_pess = bc_mod.beneficio_ajustado(bc, cenario="pessimista")
-    assert ben_pess == pytest.approx(ben_base * 0.5)
+    ben_base = bc_mod.beneficio_ajustado(bc, cenario="provavel")
+    ben_cons = bc_mod.beneficio_ajustado(bc, cenario="conservador")
+    assert ben_cons == pytest.approx(ben_base * 0.5)
 
 
 def test_cenarios_otimista_ampia_beneficio():
     caso = _caso_com_dono()
     bc = _bc_com_valores(caso)
-    ben_base = bc_mod.beneficio_ajustado(bc, cenario="base")
+    ben_base = bc_mod.beneficio_ajustado(bc, cenario="provavel")
     ben_otm = bc_mod.beneficio_ajustado(bc, cenario="otimista")
     assert ben_otm == pytest.approx(ben_base * 1.3)
 
@@ -113,10 +117,30 @@ def test_cenarios_completos_traz_trio():
     caso = _caso_com_dono()
     bc = _bc_com_valores(caso)
     trio = bc_mod.cenarios_completos(bc)
-    assert set(trio.keys()) == {"pessimista", "base", "otimista"}
-    assert trio["base"]["roi_percentual"] == pytest.approx(150.0)
-    assert trio["pessimista"]["beneficio_liquido"] < trio["base"]["beneficio_liquido"]
-    assert trio["otimista"]["beneficio_liquido"] > trio["base"]["beneficio_liquido"]
+    assert set(trio.keys()) == {"conservador", "provavel", "otimista"}
+    assert trio["provavel"]["roi_percentual"] == pytest.approx(150.0)
+    assert trio["conservador"]["beneficio_liquido"] < trio["provavel"]["beneficio_liquido"]
+    assert trio["otimista"]["beneficio_liquido"] > trio["provavel"]["beneficio_liquido"]
+
+
+def test_derivar_economia_anual_calcula_quando_perda_e_pct_positivos():
+    caso = _caso_com_dono()
+    bc = bc_mod.estado_zerado(caso["id"])
+    bc["beneficios"]["financeiro"]["perda_atual_anual"] = 600_000.0
+    bc["beneficios"]["financeiro"]["percentual_reducao"] = 25.0
+    econ = bc_mod.derivar_economia_anual(bc)
+    assert econ == pytest.approx(150_000.0)
+    assert bc["beneficios"]["financeiro"]["economia_anual"] == pytest.approx(150_000.0)
+
+
+def test_derivar_economia_anual_mantem_manual_se_perda_zero():
+    caso = _caso_com_dono()
+    bc = bc_mod.estado_zerado(caso["id"])
+    bc["beneficios"]["financeiro"]["economia_anual"] = 80_000.0
+    bc["beneficios"]["financeiro"]["perda_atual_anual"] = 0.0
+    bc["beneficios"]["financeiro"]["percentual_reducao"] = 30.0
+    bc_mod.derivar_economia_anual(bc)
+    assert bc["beneficios"]["financeiro"]["economia_anual"] == pytest.approx(80_000.0)
 
 
 # ---------------------------------------------------------------------------- #

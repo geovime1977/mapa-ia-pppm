@@ -177,18 +177,19 @@ def _secao_business_cases(story: list, casos: list, bcs: dict, est: dict) -> Non
         story.append(Paragraph(f"<b>{r['rotulo']}</b>", est["h2"]))
 
         linhas = [
-            ["Contexto e dor", (bc.get("contexto") or "—")[:400]],
+            ["Problema descrito", (bc.get("contexto") or "—")[:400]],
+            ["Linha de base (KPI hoje)", (bc.get("linha_de_base") or "—")[:400]],
             ["Caso de uso de IA", (bc.get("caso_uso") or "—")[:400]],
             ["Dados necessários", (bc.get("dados") or "—")[:400]],
             ["Investimento total", _fmt_moeda(r["investimento"])],
             ["Benefício bruto anual", _fmt_moeda(r["beneficio_bruto_anual"])],
             [
-                f"Cenário base ({bc.get('janela_meses', 12)} meses)",
+                f"Cenário provável ({bc.get('janela_meses', 12)} meses)",
                 f"BL: {_fmt_moeda(r['beneficio_liquido_base'])} · "
                 f"ROI: {r['roi_base']}%" if r['roi_base'] is not None else f"BL: {_fmt_moeda(r['beneficio_liquido_base'])} · ROI: —",
             ],
             [
-                "Payback (cenário base)",
+                "Payback (cenário provável)",
                 f"{r['payback_base']} meses" if r["payback_base"] is not None else "—",
             ],
             ["Decisão solicitada", r["decisao_rotulo"] or "— (não preenchida)"],
@@ -207,12 +208,13 @@ def _secao_business_cases(story: list, casos: list, bcs: dict, est: dict) -> Non
         story.append(Spacer(1, 0.15 * cm))
 
         cenarios = r["cenarios"]
-        story.append(Paragraph("<b>Cenários (pessimista / base / otimista):</b>", est["corpo"]))
+        story.append(Paragraph("<b>Cenários (conservador / provável / otimista):</b>", est["corpo"]))
+        _labels_cen = cfg.get("cenarios_rotulo", {})
         cen_linhas = [["Cenário", "Benefício líquido", "ROI %", "Payback"]]
-        for nome in ("pessimista", "base", "otimista"):
+        for nome in ("conservador", "provavel", "otimista"):
             info = cenarios.get(nome, {})
             cen_linhas.append([
-                nome.capitalize(),
+                _labels_cen.get(nome, nome.capitalize()),
                 _fmt_moeda(info.get("beneficio_liquido") or 0),
                 f"{info['roi_percentual']}%" if info.get("roi_percentual") is not None else "—",
                 f"{info['payback_meses']} m" if info.get("payback_meses") is not None else "—",

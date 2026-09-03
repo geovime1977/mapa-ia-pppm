@@ -16,9 +16,11 @@
     {
       "id": "financeiro",
       "rotulo": "Financeiro",
-      "descricao": "economia, receita adicional, margem, custo evitado, ROI",
+      "descricao": "perda atual × % redução → economia; receita adicional; custo evitado",
       "campos": [
-        {"id": "economia_anual", "rotulo": "Economia anual estimada (R$)", "tipo": "moeda"},
+        {"id": "perda_atual_anual", "rotulo": "Perda ou custo atual anual (R$)", "tipo": "moeda"},
+        {"id": "percentual_reducao", "rotulo": "% redução esperado (0–100)", "tipo": "numero"},
+        {"id": "economia_anual", "rotulo": "Economia anual (R$) — auto quando perda × % > 0", "tipo": "moeda"},
         {"id": "receita_adicional_anual", "rotulo": "Receita adicional anual (R$)", "tipo": "moeda"},
         {"id": "custo_evitado_anual", "rotulo": "Custo evitado anual (R$)", "tipo": "moeda"},
         {"id": "premissa", "rotulo": "Premissa e fonte", "tipo": "texto"}
@@ -72,55 +74,26 @@
   ],
   "janelas_analise_meses": [6, 12, 24],
   "cenarios_multiplicador": {
-    "pessimista": 0.5,
-    "base": 1.0,
+    "conservador": 0.5,
+    "provavel": 1.0,
     "otimista": 1.3
+  },
+  "cenarios_rotulo": {
+    "conservador": "Conservador",
+    "provavel": "Provável",
+    "otimista": "Otimista"
   },
   "decisoes_possiveis": [
     {"id": "aprovar_piloto", "rotulo": "Aprovar piloto", "descricao": "Autorizar execução do piloto com escopo, indicadores e HITL definidos.", "exige_bl_positivo": true},
-    {"id": "ajustar", "rotulo": "Ajustar escopo", "descricao": "Solicitar refinamento do caso antes de decidir (novos dados, novo recorte).", "exige_bl_positivo": false},
-    {"id": "estudar", "rotulo": "Estudar mais", "descricao": "Postergar decisão; buscar evidência adicional para reduzir incerteza.", "exige_bl_positivo": false},
-    {"id": "descartar", "rotulo": "Descartar", "descricao": "Recusar o caso — sem valor mensurável ou risco desproporcional.", "exige_bl_positivo": false}
+    {"id": "ajustar", "rotulo": "Ajustar antes do piloto", "descricao": "Solicitar refinamento do caso antes de decidir (novos dados, novo recorte).", "exige_bl_positivo": false},
+    {"id": "estudar", "rotulo": "Estudar melhor", "descricao": "Postergar decisão; buscar evidência adicional para reduzir incerteza.", "exige_bl_positivo": false},
+    {"id": "nao_recomendar_agora", "rotulo": "Não recomendar neste momento", "descricao": "Não recomendar agora — reavaliar quando dados, contexto ou risco mudarem.", "exige_bl_positivo": false}
   ],
   "cortes_bloqueio": {
-    "aprovar_exige_bl_positivo": "Decisão 'Aprovar piloto' só é liberada quando o benefício líquido no cenário base é maior que zero.",
+    "aprovar_exige_bl_positivo": "Decisão 'Aprovar piloto' só é liberada quando o benefício líquido no cenário provável é maior que zero.",
     "aprovar_exige_dono": "Corte herdado da Aula 2 (slide 30): sem dono humano declarado, o caso não é aprovável.",
     "aprovar_exige_controle": "Todo risco marcado como alto exige controle textual preenchido."
   },
-  "prompts_ferramenta": [
-    {
-      "id": "diagnostico_executivo",
-      "rotulo": "Prompt 1 — Diagnóstico executivo",
-      "quando_usar": "Antes de escrever o business case, para transformar dados dispersos em um diagnóstico estruturado.",
-      "entrada_recomendada": "Histórico de projetos, indicadores, entrevistas, atas, riscos e reclamações recorrentes.",
-      "texto": "Atue como consultor sênior em PPPM. Com base nas informações abaixo, identifique:\n1) problema central;\n2) causas prováveis;\n3) indicadores afetados;\n4) impacto financeiro ou operacional;\n5) hipótese de caso de uso de IA;\n6) dados necessários para validar a hipótese.\nResponda em formato executivo.",
-      "referencia": "Aula 3 · slide 20"
-    },
-    {
-      "id": "riscos_governanca",
-      "rotulo": "Prompt 2 — Riscos e governança",
-      "quando_usar": "Depois de propor a solução de IA, para pressionar o caso pela ótica de risco antes de assumir compromisso.",
-      "entrada_recomendada": "Descrição do caso de uso, dados envolvidos, decisões afetadas.",
-      "texto": "Avalie o caso de uso de IA descrito abaixo sob a ótica de riscos, ética, dados, segurança e governança. Classifique os riscos em baixo, médio e alto. Indique controles mínimos, ponto de intervenção humana, responsáveis, evidências de rastreabilidade e critérios para interromper o piloto.",
-      "referencia": "Aula 3 · slide 21"
-    },
-    {
-      "id": "priorizacao_roi",
-      "rotulo": "Prompt 3 — Priorização e ROI",
-      "quando_usar": "Quando houver mais de um caso e for preciso comparar antes de recomendar por onde começar.",
-      "entrada_recomendada": "Lista de casos de uso candidatos com dor, solução e dados disponíveis.",
-      "texto": "Compare os casos de uso abaixo usando os critérios: impacto, viabilidade, dados, risco e valor. Atribua notas de 1 a 5, explique cada nota, estime benefício, custo, ROI e payback quando houver dados suficientes. Ao final, recomende onde começar e quais premissas precisam ser validadas no piloto.",
-      "referencia": "Aula 3 · slide 22"
-    },
-    {
-      "id": "plano_executivo",
-      "rotulo": "Prompt 4 — Plano executivo",
-      "quando_usar": "Depois do business case preliminar, para gerar a peça de uma página que vai ao comitê.",
-      "entrada_recomendada": "Business case preliminar preenchido (problema, solução, benefícios, custos, riscos, ROI).",
-      "texto": "Com base neste business case preliminar, produza uma recomendação executiva de até uma página contendo: problema, solução de IA, benefícios esperados, investimento, ROI estimado, riscos, governança, cronograma do piloto, responsáveis, indicadores e decisão solicitada ao comitê.",
-      "referencia": "Aula 3 · slide 23"
-    }
-  ],
   "estudos_simulados": [
     {
       "id": "erp_go_live",
