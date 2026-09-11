@@ -9,3 +9,15 @@ output/
 ~$*
 .streamlit/secrets.toml
 *.credentials.json
+
+.env
+*.env.local
+venv/
+node_modules/
+*.db-shm
+*.db-wal
+dist/
+build/
+.next/
+target/
+.ruff_cache/

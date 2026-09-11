@@ -1,16 +1,58 @@
 # Manual do Consultor — mapa-ia-pppm
 
-Guia de uso completo do app https://mapa-ia-pppm.streamlit.app/ como ferramenta
-de consultoria. Baseado nas Aulas 1, 2 e 3 do curso de IA em PPPM do Prof. Bezerra
-(BSBr).
+Guia de uso completo dos apps `mapa-ia-pppm` como ferramenta de consultoria.
+Baseado nas Aulas 1, 2 e 3 do curso de IA em PPPM do Prof. Bezerra (BSBr).
 
-Este manual responde às 6 perguntas mais comuns do consultor que começa a usar
-o app com um cliente, e acrescenta outras que aparecem depois da segunda ou
-terceira sessão.
+## Duas versões do mesmo app
+
+O `mapa-ia-pppm` existe em duas versões que compartilham a mesma metodologia,
+os mesmos cálculos e o mesmo PDF final. A escolha é logística:
+
+| Aspecto | Streamlit | HTML standalone |
+|---|---|---|
+| URL | `https://mapa-ia-pppm.streamlit.app/` (público) ou `localhost:8513` | `index.html` local, abre no browser |
+| Navegação | **7 abas** (topo) | **11 etapas** (wizard sequencial) |
+| Requer internet | Sim (na versão hospedada) | Não — 100% offline após abrir |
+| Instalação | Zero (URL) ou Python + Streamlit local | Zero — 1 arquivo HTML |
+| Persistência | `session_state` (some ao fechar) | `session_state` (some ao fechar) |
+| Import/Export JSON | Sim | Sim (schema compatível com Streamlit) |
+| Distribuição para turma | Link para todos | E-mail ou OneDrive do `.html` |
+| Público-alvo | Consultor com acesso à internet | Aluno / cliente em ambiente restrito |
+
+**Regra:** use HTML quando o cliente tem restrição de rede (banco, órgão público,
+site remoto), Streamlit quando você está apresentando ao vivo com projetor.
+
+## Mapa de navegação — Streamlit × HTML
+
+| Método (Aula) | Streamlit | HTML |
+|---|---|---|
+| Contexto do cliente | Aba 1 | Etapa 1 |
+| Diagnóstico 5 dimensões | Aba 2 | Etapa 2 |
+| Mapa Inicial 5 blocos | Aba 3 | Etapa 3 |
+| Cadastro de casos de uso | Aba 4 | Etapa 4 |
+| Avaliação por 5 critérios | Aba 4 | Etapa 5 |
+| Matriz Impacto × Viabilidade | (integrada Aba 4) | Etapa 6 |
+| Governança & HITL | Aba 5 | Etapa 7 |
+| Seleção dos 3 prioritários | (implícita) | Etapa 8 |
+| Recomendação executiva | (integrada exportação) | Etapa 9 |
+| Business Case + ROI | Aba 6 | Etapa 10 |
+| Exportar PDF | Aba 7 | Etapa 11 |
+
+**Ao longo do manual usarei o nome do método** (ex: "Diagnóstico") **em vez de
+aba/etapa**. Quando precisar apontar para um lugar específico do app, cito ambos
+entre parênteses: *(Streamlit: Aba 2 · HTML: Etapa 2)*.
+
+## O que este manual cobre
+
+1. Como preencher cada uma das 11 etapas da metodologia
+2. Regras dos cortes obrigatórios da Aula 2 e da Aula 3
+3. Como o app calcula ROI, Payback e cenários
+4. **Prompts SMART do consultor** (Aulas 1, 2 e 3) — quando, por que e como usar
+5. Anexo com memória de cálculo detalhada
 
 ---
 
-## 1. Aba "Contexto" — o que preencher
+## 1. Contexto do cliente *(Streamlit: Aba 1 · HTML: Etapa 1)*
 
 Sim, aqui vão os dados do **cliente**, não os seus. O objetivo é identificar
 inequivocamente para quem esse mapa foi construído. Como esses campos entram
@@ -340,8 +382,8 @@ O PDF gerado é o **anexo de diagnóstico** da sua proposta. Sequência típica:
 3. Ao final, exporta PDF e envia junto com proposta comercial
 4. Cliente vê valor demonstrado (não abstrato) e assina mais rápido
 
-Isso é o funil Fase 2 do modelo Eixo Estratégico: transformar discovery em
-proposta assinada usando entrega tangível como âncora.
+Isso é o padrão do funil consultivo: transformar discovery em proposta
+assinada usando entrega tangível como âncora.
 
 ### Qual a diferença entre este app e o `consultor-ia-pppm`?
 
@@ -377,13 +419,16 @@ corte obrigatório e mata a utilidade do exercício.
 | 4. Casos de Uso | Aula 2 · slides 8-30, 37 | Ranking priorizado | 15 min |
 | 5. Governança | Aula 2 · slides 32-36 | HITL + rastreabilidade | 10 min |
 | 6. Business Case | Aula 3 · slides 9-19 | ROI + payback + decisão por caso | 15 min |
-| 7. Prompts Executivos | Aula 3 · slides 20-23 | 4 prompts prontos p/ ChatGPT/Claude | consulta |
-| 8. Exportar PDF | (saída) | Mapa Executivo em PDF | 1 min |
+| 7. Exportar PDF | (saída) | Mapa Executivo em PDF | 1 min |
 | **Total** | | | **~60 min** |
 
 60min é o tempo típico de uma sessão de discovery + business case com cliente.
-Se você só faz discovery, pode fechar em 45min pulando as abas 6-7. Se o cliente
+Se você só faz discovery, pode fechar em 45min pulando a aba 6. Se o cliente
 já veio com dor mapeada, comece na aba 4 e feche em 30min.
+
+Os 4 prompts executivos da Aula 3 (Ferramentas 1-4) e todos os prompts SMART
+das Aulas 1 e 2 vivem agora no **Anexo do Consultor** — `docs/ANEXO-CONSULTOR.md`.
+Uso interno; nunca acompanha o PDF do cliente.
 
 ---
 
@@ -397,16 +442,17 @@ todos herdam automaticamente o dono e o corte da Aula 2.
 
 | Bloco | O que preencher | Fonte |
 |---|---|---|
-| Contexto e dor | Dor mensurável, com número. "32% dos projetos atrasaram 20+ dias no último semestre, custo estimado R$ 480k." | Slide 9 |
+| Problema descrito | O que dói hoje. "Aprovação de crédito depende de análise manual e trava vendas." | Slide 9 |
+| Linha de base | Valor atual do KPI. "SLA médio 4,2 dias · 480 análises/mês · custo R$ 62/análise." | Slide 9 |
 | Caso de uso | Como a IA atua (entrada → processamento → saída), sem cair no fascínio técnico | Slide 10 |
 | Dados | Quais dados a IA consome e como serão validados | Slide 10 |
-| Benefícios · Financeiro | Economia, receita adicional, custo evitado — em R$/ano | Slide 11 |
+| Benefícios · Financeiro | Perda atual × % redução → economia; + receita adicional; + custo evitado — em R$/ano | Slide 11 |
 | Benefícios · Operacional | Horas economizadas/mês × pessoas × custo/hora | Slide 17 |
 | Benefícios · Estratégico | Velocidade de decisão, stakeholders, governança (qualitativo) | Slide 19 |
 | Custos (5 camadas) | Tecnologia · Dados · Pessoas · Mudança · Governança — cada um com valor + premissa | Slide 12 |
 | Riscos | 4 riscos-padrão da aula, cada um em baixo/médio/alto + controle textual | Slide 13 |
-| ROI e cenários | Janela 6/12/24 meses × cenário pessimista (0.5) / base (1.0) / otimista (1.3) | Slides 14-15 |
-| Decisão solicitada | Aprovar piloto / Ajustar / Estudar mais / Descartar | Slide 7 |
+| ROI e cenários | Janela 6/12/24 meses × cenário conservador (0.5) / provável (1.0) / otimista (1.3) | Slides 14-15 |
+| Decisão solicitada | Aprovar piloto / Ajustar antes do piloto / Estudar melhor / Não recomendar neste momento | Slide 7 |
 
 ### Fórmula do ROI (mesma do slide 14)
 
@@ -415,48 +461,420 @@ todos herdam automaticamente o dono e o corte da Aula 2.
 - **Benefícios líquidos** = benefício financeiro anual + horas economizadas
   monetizadas, ajustado pela janela de análise e pelo cenário escolhido
 - **Investimento** = soma das 5 camadas de custo
-- **Cenário base = 1.0**; pessimista corta o benefício pela metade (0.5);
+- **Cenário provável = 1.0**; conservador corta o benefício pela metade (0.5);
   otimista amplia em 30% (1.3)
+
+### Auto-derivação da economia anual (v1.2)
+
+Quando o aluno preenche **perda atual anual** (R$) **e** **% redução esperado** (0–100),
+o app calcula automaticamente `economia_anual = perda × %/100` e sobrescreve o
+campo manual. Se qualquer um dos dois estiver zero, o aluno mantém o número
+digitado direto. A ideia é forçar o exercício mental "baseline × ganho esperado"
+antes de aceitar um número final solto.
 
 ### Corte obrigatório novo da Aula 3
 
 A decisão **"Aprovar piloto"** só é liberada quando **3 condições** valem juntas:
 
-1. **Benefício líquido positivo** no cenário base (BL > 0)
+1. **Benefício líquido positivo** no cenário provável (BL > 0)
 2. **Dono humano declarado** no caso (herdado da Aula 2)
 3. **Controle textual preenchido** em todo risco marcado como "alto"
 
 Se qualquer uma falha, o app deixa "Aprovar piloto" visível mas marcado como
-bloqueado — o consultor tem que escolher "Ajustar", "Estudar mais" ou
-"Descartar". Isso é intencional: força o business case a passar por um filtro
-antes de sair da sessão como recomendação de investimento.
+bloqueado — o consultor tem que escolher "Ajustar antes do piloto", "Estudar
+melhor" ou "Não recomendar neste momento". Isso é intencional: força o business
+case a passar por um filtro antes de sair da sessão como recomendação de
+investimento.
 
 ### Por que não tem método PO no cálculo
 
 Decisão explícita do dono do projeto: o app não usa Monte Carlo, MILP, AHP nem
 qualquer método de Pesquisa Operacional. Só a matemática direta do slide 14 do
-Prof. Bezerra. Se o consultor precisa de análise probabilística mais fina, ele
-sobe para o Motor PO da Eixo Estratégico — que é outra ferramenta, para outra
-etapa do funil.
+Prof. Bezerra. Se o consultor precisa de análise probabilística mais fina,
+usa uma ferramenta separada — este app cobre estritamente o escopo das
+Aulas 1, 2 e 3.
 
 ---
 
-## 9. Aba "Prompts Executivos" — os 4 prompts da Aula 3
+## 9. Prompts do consultor — 9 prompts SMART para as 3 aulas
 
-Aula 3 · slides 20-23. Quatro prompts prontos para o consultor colar no
-ChatGPT ou Claude durante a sessão, quando precisar acelerar diagnóstico,
-avaliar risco, priorizar ou fechar plano.
+Os prompts foram retirados do app (não são mais uma aba/etapa) por 3 razões:
 
-| # | Prompt | Quando usar |
+1. **Nunca eram executados pelo app** — só exibidos para copiar/colar em
+   ChatGPT/Claude, sem estrutura SMART e sem prevenção contra vieses
+2. **Não devem aparecer no PDF do cliente** — mostrar o prompt banaliza o
+   entregável e revela método consultivo
+3. **Precisavam de estrutura SMART** — o slide traz versões curtas; a
+   consultoria real exige prevenção 80/20, critérios explícitos, formato
+   de saída e checklist de vieses
+
+Agora vivem aqui no manual (uso interno do consultor) e em `docs/ANEXO-CONSULTOR.md`
+(versão mais detalhada com memória de cálculo).
+
+**Regra de propriedade:** as versões SMART são diferencial competitivo do
+consultor — não colar em canal público (Slack de cliente, e-mail sem NDA,
+LinkedIn).
+
+### Padrão SMART
+
+Todos os prompts seguem **S · M · A · R · T**:
+
+| Letra | Bloco | O que declara |
 |---|---|---|
-| 1 | **Diagnóstico executivo** | Antes de escrever o business case — transforma dados dispersos em diagnóstico estruturado |
-| 2 | **Riscos e governança** | Depois de propor a solução — pressiona o caso pela ótica de risco antes de assumir compromisso |
-| 3 | **Priorização e ROI** | Quando houver 2+ casos e for preciso comparar antes de recomendar por onde começar |
-| 4 | **Plano executivo** | Depois do business case preliminar — gera a peça de uma página que vai ao comitê |
+| **S** | Situação | Quem é você, onde está, o que faz |
+| **M** | Mensagem | Ação exata da IA — verbo específico e escopo delimitado |
+| **A** | Alvo | Público-alvo e objetivo final da resposta |
+| **R** | Referência | Estilo, tom, framework ou exemplo a seguir |
+| **T** | Tipo | Formato, tamanho, idioma e CTA da resposta |
 
-Cada prompt vem com **bloco copiável** (botão de copy do Streamlit) e indicação
-da entrada recomendada. Consultor não precisa decorar nem improvisar — bastam
-os 4 prompts nesta aba para cobrir o fluxo Aula 3 inteiro.
+Complementos de engenharia de prompt:
+- **80/20** — 80% do prompt é prevenção; 20% é instrução
+- **CoT 2026** — não pedir "pense passo a passo"; dar critérios explícitos
+- **Reasoning ON** para análise/decisão; **OFF** para redação criativa
+
+### Ordem cronológica de uso
+
+```
+Reunião cliente → [1.1] Diagnóstico → [1.2] Mapa Inicial
+                → [2.1] Geração de casos → [2.2] HITL por caso
+                → Filtro top-3
+                → [3.1] Diagnóstico executivo (por caso)
+                → [3.2] Riscos e governança (por caso)
+                → App calcula ROI/Payback
+                → [3.3] Priorização entre casos (se 2+)
+                → [3.4] Premortem
+                → [3.5] Plano executivo (1 página)
+                → Comitê decide
+```
+
+---
+
+### AULA 1 — Diagnóstico e Mapa Inicial
+
+#### Prompt 1.1 — Entrevista estruturada de diagnóstico
+
+- **QUANDO usar:** logo após a primeira reunião com o cliente
+- **POR QUE usar:** força atribuição das notas 0-6 a evidência textual da
+  entrevista — reduz viés de disponibilidade e ancoragem que aparecem quando
+  o aluno pontua "no achismo"
+- **COMO usar:** colar a transcrição ou respostas do questionário. Reasoning **ON**.
+  Depois preenche direto no Diagnóstico *(Streamlit: Aba 2 · HTML: Etapa 2)*
+
+```
+S — Situação: Sou consultor aplicando o diagnóstico de
+    maturidade em IA da Aula 1 do Prof. Bezerra (BSBr) em uma empresa de
+    porte [PORTE] do setor [SETOR]. Terminei a primeira entrevista com o
+    sponsor e tenho as notas abaixo.
+M — Mensagem: Para CADA uma das 5 dimensões (Estratégia · Dados · Talento
+    · Governança · Cultura), atribua nota 0-6 com JUSTIFICATIVA em 1 linha
+    citando trecho literal da entrevista. Ao final, aponte a dimensão de
+    MENOR nota como gargalo prioritário. NÃO invente evidência — se a
+    entrevista não cobrir uma dimensão, escreva "sem evidência coletada,
+    revisitar em entrevista 2". NÃO use jargão consultor genérico
+    (transformação digital, jornada, unlock).
+A — Alvo: Consultor (uso interno); objetivo é preencher o Diagnóstico
+    com nota justificada por evidência.
+R — Referência: Escala 0-6 do slide 26 (0-1 inicial · 2-3 desenvolvendo ·
+    4-5 definido · 6 otimizado); vocabulário da Aula 1.
+T — Tipo: Tabela Markdown 5 linhas × 3 colunas (Dimensão · Nota · Trecho
+    literal); após a tabela, 1 parágrafo curto nomeando o gargalo. pt-BR.
+
+Entrada: [colar transcrição da entrevista OU respostas ao questionário]
+```
+
+#### Prompt 1.2 — Mapa Inicial em 5 blocos
+
+- **QUANDO usar:** depois do diagnóstico preenchido, antes de descrever o Mapa
+- **POR QUE usar:** força blocos balanceados e uso do vocabulário da Aula 1;
+  evita o vício de escrever "Contexto" longo e deixar "Riscos" vazio
+- **COMO usar:** colar as notas 0-6 + trechos da entrevista. Reasoning **OFF**
+  (é redação executiva; reasoning empobrece). Depois preenche no Mapa Inicial
+  *(Streamlit: Aba 3 · HTML: Etapa 3)*
+
+```
+S — Situação: Terminei o diagnóstico de maturidade em IA da Aula 1 e
+    preciso montar o Mapa Inicial em 5 blocos.
+M — Mensagem: Produza um bloco de 3-5 linhas para cada uma das 5 seções:
+    (1) Contexto do negócio, (2) Dor mensurável, (3) Dados disponíveis
+    e lacunas, (4) Riscos e restrições, (5) Valor potencial. Cada bloco
+    deve terminar com UMA frase de arremate. NÃO ultrapasse 5 linhas por
+    bloco. NÃO use bullets — texto corrido. NÃO cite fornecedor de IA
+    específico (OpenAI, Google) no bloco Contexto.
+A — Alvo: Sponsor do cliente; objetivo é ele reconhecer o próprio negócio
+    em 30 segundos de leitura.
+R — Referência: Estilo executivo direto; vocabulário da Aula 1 (dor
+    mensurável, dados, HITL, valor potencial).
+T — Tipo: Markdown com 5 subseções nomeadas (## Contexto · ## Dor · ##
+    Dados · ## Riscos · ## Valor); pt-BR; máximo 400 palavras totais.
+
+Entrada: [colar notas de 0-6 das 5 dimensões + trechos da entrevista]
+```
+
+---
+
+### AULA 2 — Casos de Uso, Priorização e Governança HITL
+
+#### Prompt 2.1 — Geração de casos de uso a partir da dor
+
+- **QUANDO usar:** quando o cliente identifica dor (Bloco 2 do Mapa) mas não
+  sabe traduzir em caso de uso concreto
+- **POR QUE usar:** evita o erro clássico do slide 8 da Aula 2 — pular direto
+  para "vamos usar IA generativa" sem definir entrada, processamento e saída
+- **COMO usar:** colar dor + gargalo do diagnóstico. Reasoning **ON**. Depois
+  cadastra no CRUD *(Streamlit: Aba 4 · HTML: Etapa 4)*
+
+```
+S — Situação: O cliente tem a dor mensurável abaixo e o gargalo prioritário
+    identificado no diagnóstico da Aula 1. Preciso gerar 3-5 casos de uso
+    candidatos de IA para cadastrar no app mapa-ia-pppm.
+M — Mensagem: Para cada caso, descreva: (1) rótulo curto (até 8 palavras),
+    (2) dor específica endereçada, (3) fluxo entrada → processamento → saída
+    em 1 linha, (4) dono humano da decisão (cargo, não nome), (5) dados
+    necessários. NÃO gere caso que dependa de dado inexistente na empresa.
+    NÃO proponha "chatbot genérico" ou "assistente virtual" — exija verbo
+    de ação (classificar, priorizar, prever, resumir, alertar). NÃO ultra-
+    passe 5 casos — melhor 3 casos densos que 5 rasos.
+A — Alvo: Consultor; objetivo é ter 3-5 linhas prontas para digitar
+    no CRUD de casos.
+R — Referência: 7 domínios da Aula 2 (slides 16-22); princípio "IA no
+    processo de decisão, não no lugar da decisão".
+T — Tipo: Tabela Markdown 5 colunas (Rótulo · Dor · Fluxo · Dono · Dados);
+    pt-BR.
+
+Entrada:
+- Dor mensurável: [colar]
+- Gargalo prioritário: [colar]
+- Setor/porte da empresa: [colar]
+```
+
+#### Prompt 2.2 — Definição de HITL por caso
+
+- **QUANDO usar:** depois de cadastrar os casos, antes de definir governança
+- **POR QUE usar:** aciona a regra "impacto ↑ = validação humana ↑"; evita
+  o default preguiçoso de marcar todos como HITL "leve"
+- **COMO usar:** colar lista de casos com dono e dor. Reasoning **ON**. Depois
+  preenche na Governança *(Streamlit: Aba 5 · HTML: Etapa 7)*
+
+```
+S — Situação: Tenho N casos de uso cadastrados e preciso definir o nível de
+    HITL (Human In The Loop) de cada um antes de preencher a Governança.
+M — Mensagem: Para cada caso, classifique HITL em (a) LEVE — humano revisa
+    amostragem periódica, (b) ESTRUTURADA — humano aprova cada saída antes
+    de aplicar, (c) EXECUTIVA — humano decide, IA só recomenda. Para cada
+    classificação, aponte: (1) motivo em 1 linha, (2) responsável nominal
+    (cargo), (3) evidência de rastreabilidade obrigatória (log · ata · e-mail
+    · sistema). NÃO classifique como LEVE qualquer caso que afete cliente
+    final ou decisão financeira acima de R$ 10 mil. NÃO deixe caso sem
+    responsável — se não há dono, marque "BLOQUEADO — sem dono humano".
+A — Alvo: Consultor + sponsor; objetivo é passar no corte obrigatório
+    da Aula 2 (slide 30).
+R — Referência: 3 níveis de HITL da Aula 2 (slides 32-36); princípio de ouro
+    "impacto ↑ = validação humana ↑".
+T — Tipo: Tabela Markdown 5 colunas (Caso · HITL · Motivo · Responsável ·
+    Rastreabilidade); pt-BR.
+
+Entrada: [colar lista de casos com rótulo, dono e dor]
+```
+
+---
+
+### AULA 3 — Business Case, ROI e Decisão do Comitê
+
+#### Prompt 3.1 — Diagnóstico executivo (SMART)
+
+- **QUANDO usar:** ANTES de escrever o business case
+- **POR QUE usar:** o business case exige dor mensurável; sem prompt, o aluno
+  escreve "processo lento" — sem número, sem fonte. Este força métrica e
+  percorre as 5 etapas de decisão
+- **COMO usar:** colar todo material disponível (entrevistas, KPIs, atas).
+  Reasoning **ON**
+
+```
+S — Situação: Sou consultor sênior em PPPM aplicando o método da Aula 3
+    do Prof. Bezerra (BSBr) para transformar dados dispersos em diagnóstico
+    estruturado antes de escrever o business case.
+M — Mensagem: Analise as evidências abaixo e produza diagnóstico que
+    percorra as 5 etapas de decisão: (1) definir problema central em uma
+    frase, (2) especificar objetivo mensurável, (3) listar até 3 alternativas
+    de caso de uso de IA, (4) discutir consequências de cada uma (impacto
+    financeiro/operacional, dados necessários, risco principal), (5) nomear
+    trade-offs explícitos. NÃO invente números — marque como "estimativa"
+    qualquer valor sem fonte na entrada. NÃO use jargão consultor genérico
+    (sinergia, alavancar, unlock, transformar).
+A — Alvo: Comitê executivo do sponsor; objetivo é reduzir incerteza para
+    decidir se o caso merece business case completo.
+R — Referência: Estilo objetivo, tom analítico; vocabulário da Aula 3
+    (dor mensurável · caso de uso · dados · benefício em 3 camadas · HITL).
+T — Tipo: Markdown com 5 seções nomeadas (Problema · Objetivo · Alternativas
+    · Consequências · Trade-offs); no máximo 400 palavras; pt-BR.
+
+Entrada: [colar histórico de projetos, indicadores, entrevistas, atas,
+riscos e reclamações recorrentes]
+```
+
+#### Prompt 3.2 — Riscos e governança (SMART)
+
+- **QUANDO usar:** DEPOIS de propor a solução, ANTES de estimar custos
+- **POR QUE usar:** obriga a pressionar o caso pela ótica de risco antes de o
+  sponsor assumir compromisso financeiro; aciona checklist de vieses
+- **COMO usar:** colar descrição do caso + dados envolvidos. Reasoning **ON**
+
+```
+S — Situação: Sou consultor pressionando o caso de uso de IA já proposto
+    pela ótica de risco, ética e governança antes que o sponsor assuma
+    compromisso financeiro (Aula 3 · Ferramenta 2).
+M — Mensagem: Avalie o caso descrito e (1) classifique cada risco em
+    baixo/médio/alto com JUSTIFICATIVA de 1 linha, (2) para cada risco alto
+    aponte controle mínimo obrigatório, ponto de intervenção humana (HITL),
+    responsável nominal e evidência de rastreabilidade, (3) defina 3
+    critérios objetivos que interrompem o piloto ("kill switches"). Rode
+    mentalmente o checklist de vieses: excesso de confiança, confirmação,
+    groupthink — nomeie se detectar. NÃO liste risco sem controle
+    correspondente. NÃO use "monitorar" ou "acompanhar" como controle —
+    exija verbo de ação (validar, aprovar, auditar, bloquear).
+A — Alvo: GP e sponsor; objetivo é ter tabela de risco pronta para
+    validação humana e comitê.
+R — Referência: Framework HITL da Aula 2 (leve · estruturada · executiva)
+    + catálogo de risco da Aula 3 (dados sensíveis · decisão indevida ·
+    baixa adoção · viés ou erro).
+T — Tipo: Tabela Markdown 6 colunas (Risco · Nível · Justificativa ·
+    Controle · HITL · Kill switch); após a tabela, 3 bullets com vieses
+    detectados na proposta. pt-BR.
+
+Entrada: [colar descrição do caso de uso, dados envolvidos, decisões
+afetadas]
+```
+
+#### Prompt 3.3 — Priorização entre casos (SMART)
+
+- **QUANDO usar:** quando há 2+ casos e é preciso escolher por onde começar
+- **POR QUE usar:** o app calcula ROI/Payback determinístico, mas não faz
+  comparação qualitativa nem checa premissas — este prompt cobre a lacuna
+- **COMO usar:** colar lista de casos com ROI já calculado pelo app.
+  Reasoning **ON**
+
+```
+S — Situação: Tenho 2+ casos de uso candidatos e preciso recomendar por
+    onde começar antes de gastar orçamento de piloto (Aula 3 · Ferramenta
+    3). O app já calcula ROI/Payback — este prompt NÃO recalcula, apenas
+    compara qualitativamente e checa premissas.
+M — Mensagem: Compare os casos usando os 5 critérios da Aula 2 (Impacto ·
+    Viabilidade · Dados · Risco · Valor estratégico) com nota 1-5 e
+    JUSTIFICATIVA por nota. Ao final: (a) recomende UM caso para começar
+    com racional explícito, (b) liste as premissas que precisam ser
+    validadas no piloto para o ROI se sustentar, (c) nomeie qual heurística
+    de decisão poderia estar contaminando o ranking (disponibilidade,
+    representatividade, afeto, ancoragem). NÃO empate — se dois casos
+    tiverem score igual, use "menor risco de reputação" como desempate.
+    NÃO recalcule ROI — assuma os valores já vindos do app.
+A — Alvo: Comitê de portfólio; objetivo é 1 decisão de "por onde começar"
+    com premissas auditáveis.
+R — Referência: Matriz Impacto × Viabilidade da Aula 2 + princípio Aula 3
+    "reduzir incerteza, não vender entusiasmo".
+T — Tipo: Tabela comparativa (linhas = casos, colunas = 5 critérios +
+    total) + 3 seções após a tabela (Recomendação · Premissas do piloto ·
+    Heurística contaminante). pt-BR, até 500 palavras.
+
+Entrada: [colar lista de casos com dor, solução, dados, ROI calculado
+pelo app]
+```
+
+#### Prompt 3.4 — Premortem (SMART, adição fora do slide)
+
+- **QUANDO usar:** DEPOIS de decidir "por onde começar", ANTES do plano executivo
+- **POR QUE usar:** força imaginar o fracasso ANTES de vender o sucesso;
+  combate direto ao excesso de confiança
+- **COMO usar:** colar caso recomendado + business case. Reasoning **ON**.
+- **Aviso:** NÃO consta na Aula 3 do Prof. É adição do consultor baseada em
+  Gary Klein (*Sources of Power*). Diferencial — não colocar no PDF do cliente
+
+```
+S — Situação: Já decidi qual caso vai virar piloto e o business case está
+    completo no app. ANTES de escrever o plano executivo para o comitê,
+    preciso rodar um premortem para pressionar a decisão.
+M — Mensagem: Escreva o cenário: "Seis meses depois do go-live, o piloto
+    foi cancelado com prejuízo." Liste (1) as 5 causas mais prováveis do
+    fracasso em ordem de probabilidade, (2) para cada causa, o SINAL
+    ANTECIPADO que o comitê poderia ter visto na semana 2, (3) para cada
+    causa, o ajuste no escopo do piloto que preveniria. NÃO minimize
+    causas com "gestão de mudança" ou "comunicação insuficiente" — esses
+    são sintomas, não causas. NÃO cite falha de tecnologia genérica —
+    aponte qual componente específico falha.
+A — Alvo: Consultor (uso interno); objetivo é ajustar o plano
+    executivo antes de submeter ao comitê.
+R — Referência: Técnica de premortem de Gary Klein; regra 5 de reparos
+    cognitivos (`~/.claude/rules/processos-decisorios.md`).
+T — Tipo: Tabela Markdown 3 colunas (Causa · Sinal semana 2 · Ajuste
+    preventivo); pt-BR; exatamente 5 linhas.
+
+Entrada: [colar caso recomendado + business case completo do app]
+```
+
+#### Prompt 3.5 — Plano executivo de 1 página (SMART)
+
+- **QUANDO usar:** DEPOIS do premortem, para gerar a peça final que vai ao comitê
+- **POR QUE usar:** o comitê decide em 90 segundos; sem prompt, o aluno entrega
+  3 páginas de contexto e 1 parágrafo de decisão — este inverte
+- **COMO usar:** colar business case + resultado do premortem. Reasoning **OFF**
+
+```
+S — Situação: Business case preliminar do caso está preenchido no app
+    (números de ROI/Payback já calculados) e o premortem foi rodado.
+    Preciso gerar a peça de 1 página para o comitê que decide (Aula 3 ·
+    Ferramenta 4).
+M — Mensagem: Produza recomendação executiva de 1 página com estas seções
+    OBRIGATÓRIAS na ordem: (1) Problema com indicador impactado, (2)
+    Solução de IA em 2 frases, (3) Benefícios nas 3 camadas (financeiro R$
+    · operacional horas · estratégico texto), (4) Investimento total e
+    detalhamento por camada, (5) ROI e Payback no cenário provável + faixa
+    conservador-otimista, (6) 3 riscos principais com controle e HITL, (7)
+    Cronograma do piloto (marcos + datas), (8) Responsáveis nominais, (9)
+    Indicadores de sucesso mensuráveis (com linha de base, fórmula, dono,
+    fonte, frequência), (10) Decisão solicitada ao comitê em UMA frase.
+    NÃO adicione seção de "conclusão" ou "próximos passos genéricos". NÃO
+    altere os números do app — cite-os como vieram. Se faltar dado para
+    alguma seção, escreva "PENDENTE — [o que falta]".
+A — Alvo: Comitê executivo do sponsor com poder de aprovar orçamento;
+    leitura em 90 segundos.
+R — Referência: Roteiro de 5 minutos da Aula 3 (problema · solução ·
+    ROI · riscos · decisão) + princípio de ouro da governança
+    (impacto ↑ = validação humana ↑).
+T — Tipo: Markdown com 10 seções numeradas exatamente como listadas;
+    máximo 1 página A4 (~450 palavras); pt-BR; tom decisório.
+
+Entrada:
+- Business case do app: [colar]
+- Resultado do premortem: [colar]
+```
+
+---
+
+### Versões literais dos 4 prompts do Prof. Bezerra
+
+Preserva a fidelidade pedagógica quando você estiver **ensinando** a metodologia
+(vs. **aplicando** em consultoria real). Para consultoria real, prefira as
+versões SMART acima.
+
+- **Ferramenta 1 · Diagnóstico executivo:** *"Atue como consultor sênior em
+  PPPM. Com base nas informações abaixo, identifique: 1) problema central;
+  2) causas prováveis; 3) indicadores afetados; 4) impacto financeiro ou
+  operacional; 5) hipótese de caso de uso de IA; 6) dados necessários para
+  validar a hipótese. Responda em formato executivo."*
+- **Ferramenta 2 · Riscos e governança:** *"Avalie o caso de uso de IA
+  descrito abaixo sob a ótica de riscos, ética, dados, segurança e governança.
+  Classifique os riscos em baixo, médio e alto. Indique controles mínimos,
+  ponto de intervenção humana, responsáveis, evidências de rastreabilidade
+  e critérios para interromper o piloto."*
+- **Ferramenta 3 · Priorização e ROI:** *"Compare os casos de uso abaixo
+  usando os critérios: impacto, viabilidade, dados, risco e valor. Atribua
+  notas de 1 a 5, explique cada nota, estime benefício, custo, ROI e payback
+  quando houver dados suficientes. Ao final, recomende onde começar e quais
+  premissas precisam ser validadas no piloto."*
+- **Ferramenta 4 · Plano executivo:** *"Com base neste business case
+  preliminar, produza uma recomendação executiva de até uma página contendo:
+  problema, solução de IA, benefícios esperados, investimento, ROI estimado,
+  riscos, governança, cronograma do piloto, responsáveis, indicadores e
+  decisão solicitada ao comitê."*
 
 ---
 
@@ -469,9 +887,9 @@ uma seção nova antes da recomendação:
 **Seção 5 — Business Cases preliminares** — 1 subseção por caso com business
 case preenchido. Cada subseção traz:
 
-- Tabela com 8 blocos (contexto, caso de uso, dados, investimento, benefício
-  bruto/ano, cenário base com BL e ROI, payback, decisão solicitada)
-- Tabela cenários (pessimista/base/otimista) com BL, ROI% e payback
+- Tabela com 9 blocos (problema, linha de base, caso de uso, dados, investimento,
+  benefício bruto/ano, cenário provável com BL e ROI, payback, decisão solicitada)
+- Tabela cenários (conservador/provável/otimista) com BL, ROI% e payback
 - Se a decisão "Aprovar piloto" está marcada mas não passa nos cortes, o PDF
   destaca as pendências abertas — o comitê vê a inconsistência
 
