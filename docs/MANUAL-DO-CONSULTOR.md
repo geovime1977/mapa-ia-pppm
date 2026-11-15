@@ -10,7 +10,7 @@ os mesmos cálculos e o mesmo PDF final. A escolha é logística:
 
 | Aspecto | Streamlit | HTML standalone |
 |---|---|---|
-| URL | `https://mapa-ia-pppm.streamlit.app/` (público) ou `localhost:8513` | `index.html` local, abre no browser |
+| URL | `https://mapa-ia-pppm.streamlit.app/` (público) ou `localhost:8535` | `index.html` local, abre no browser |
 | Navegação | **7 abas** (topo) | **11 etapas** (wizard sequencial) |
 | Requer internet | Sim (na versão hospedada) | Não — 100% offline após abrir |
 | Instalação | Zero (URL) ou Python + Streamlit local | Zero — 1 arquivo HTML |
@@ -357,10 +357,10 @@ git clone https://github.com/geovime1977/mapa-ia-pppm
 cd mapa-ia-pppm
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/streamlit run app.py --server.port 8513
+.venv/bin/streamlit run app.py --server.port 8535
 ```
 
-Roda em `localhost:8513`, offline após a instalação.
+Roda em `localhost:8535`, offline após a instalação.
 
 ### Posso rodar o mesmo cliente com 3 pilotos diferentes?
 
